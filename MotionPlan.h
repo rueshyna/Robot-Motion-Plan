@@ -4,10 +4,18 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <cmath>
+#include <QtGui>
 
-enum STATE { NUM_OF_OBJECTS=0, NEW_OBJECT, NUM_OF_POLYGONS, NUM_OF_VERTICES, VERTICE_POINT, INIT, GOAL, NUM_OF_CONTROL_POINTS,  CONTROL_POINT };
+#define SCREEN_WIDTH 400
+#define SCREEN_HIGHT 400
+#define SCALE 3
+
+enum STATE { NUM_OF_OBJECTS=0, NUM_OF_POLYGONS, NUM_OF_VERTICES, VERTICE_POINT, INIT, GOAL, NUM_OF_CONTROL_POINTS,  CONTROL_POINT };
 
 enum INPUT { ROBOT, OBSTACLE };
+
+enum BUTTON { LEFT, RIGHT};
 
 using std::vector;
 using std::string;
@@ -17,60 +25,109 @@ using std::istringstream;
 using std::cout;
 using std::endl;
 
-class Point{
-  public :
-    Point(double _x = 0.0, double _y = 0.0):x(_x),y(_y){};
-  public :
-    double* getX();
-    double* getY();
-  private :
-    double x;
-    double y;
-};
-
-typedef vector<Point> Vertice;
+typedef QVector<QPoint> Vertice;
 
 class Object{
   public :
     Object();
   protected :
-    vector< Vertice > vertices;
-    Point init_position;
-    double init_angle;
+    vector<QPolygonF> polygons;
+    QPointF init_position;
+    qreal init_angle;
   public :
-    vector< Vertice >* getVertices();
-    Point* getInit_position();
-    double* getInit_angle();
+    vector<QPolygonF>* getPolygons();
+    QPointF* getInit_position();
+    qreal* getInit_angle();
 };
 
-typedef vector<Point> ControlPoints;
+typedef Object ObstacleData;
+typedef QVector<QPoint> ControlPoints;
 
-class Robot : public Object{
+class RobotData : public Object{
   public :
-    Robot();
+    RobotData();
   private :
-    Point goal_position;
-    double goal_angle;
+    QPointF goal_position;
+    qreal goal_angle;
     ControlPoints controlPoint;
   public :
-    Point* getGoal_position();
-    double* getGoal_angle();
+    QPointF* getGoal_position();
+    qreal* getGoal_angle();
     ControlPoints* getControlPoint();
 };
 
-typedef Object Obstacle;
 
-class IO{
+class Modul{
   public :
-    IO();
+    Modul();
   private :
-    vector<Obstacle> obstacle;
-    vector<Robot> robot;
+    vector<ObstacleData> obstacle;
+    vector<RobotData> robot;
     int setNumOf(string*);
     void setControl(string*, Object*);
     void setPosition(string*, Object*, STATE);
   public :
     void read_file(string*, INPUT);
-    vector<Obstacle>* getObstacles();
-    vector<Robot>* getRobots();
+    vector<ObstacleData>* getObstacles();
+    vector<RobotData>* getRobots();
 };
+
+class PainterWidget : public QGraphicsView{
+  Q_OBJECT
+  public :
+    PainterWidget(QGraphicsScene* , vector<RobotData>*, vector<ObstacleData>*);
+    vector<RobotData>* robots;
+    vector<ObstacleData>* obstacles;
+  protected :
+    void keyPressEvent(QKeyEvent*);
+    void scaleView(qreal);
+};
+
+class Obstacle : public QGraphicsItem{
+  public:
+    Obstacle();
+    Obstacle(PainterWidget*);
+    Obstacle(PainterWidget*,ObstacleData);
+    QPainterPath shape() const;
+    QRectF boundingRect() const;
+    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
+    void initPos();
+  protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent*);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent*);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent*);
+  private:
+    QPointF pressPos;
+    PainterWidget *graph;
+    ObstacleData dataset;
+    const vector<QPolygonF> mask;
+};
+class View{
+  public :
+    View(vector<RobotData>*, vector<ObstacleData>*);
+    vector<RobotData>* robots;
+    vector<ObstacleData>* obstacles;
+  private :
+    void productWindow();
+};
+
+
+/*
+class Robot : public QGraphicsItem{
+  public:
+    Robot(ViewPort*);
+    Robot(ViewPort*, RobotData);
+    bool advance();
+    QRectF boundingRect() const;
+    QPainterPath shape() const;
+    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
+    void initPos();
+  protected:
+    QVariant itemChange(GraphicsItemChange, const QVariant&);
+    void mousePressEvent(QGraphicsSceneMouseEvent*);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent*);
+  private:
+    QPointF newPos;
+    ViewPort *graph;
+    RobotData dataset;
+};*/
