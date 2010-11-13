@@ -1,21 +1,15 @@
-#include <vector>
-#include <cstring>
-#include <string>
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <cmath>
 #include <QtGui>
+#include <vector>
+#include <cstring>
+#include <string>
 
 #define SCREEN_WIDTH 400
 #define SCREEN_HIGHT 400
 #define SCALE 3
-
-enum STATE { NUM_OF_OBJECTS=0, NUM_OF_POLYGONS, NUM_OF_VERTICES, VERTICE_POINT, INIT, GOAL, NUM_OF_CONTROL_POINTS,  CONTROL_POINT };
-
-enum INPUT { ROBOT, OBSTACLE };
-
-enum BUTTON { LEFT, RIGHT};
 
 using std::vector;
 using std::string;
@@ -25,51 +19,70 @@ using std::istringstream;
 using std::cout;
 using std::endl;
 
-typedef QVector<QPoint> Vertice;
+enum STATE { NUM_OF_OBJECTS=0, NUM_OF_POLYGONS, NUM_OF_VERTICES, VERTICE_POINT, INIT, GOAL, NUM_OF_CONTROL_POINTS,  CONTROL_POINT };
 
-class Object{
+enum INPUT { ROBOT, OBSTACLE };
+
+enum ROBOT_POS {R_INIT, R_GOAL, NONE};
+
+/* Modul */
+class ObjectData{
   public :
-    Object();
+    ObjectData();
   protected :
-    vector<QPolygonF> polygons;
-    QPointF init_position;
-    qreal init_angle;
+    QVector<QPolygonF> _polygons;
+    QPointF _initPos;
+    qreal _initAngle;
   public :
-    vector<QPolygonF>* getPolygons();
-    QPointF* getInit_position();
-    qreal* getInit_angle();
+    QVector<QPolygonF>* polygons();
+    QPointF* initPos();
+    qreal initAngle();
+    void setInitPos(QPointF*);
+    void setInitAngle(qreal);
 };
 
-typedef Object ObstacleData;
+typedef ObjectData ObstacleData;
 typedef QVector<QPoint> ControlPoints;
 
-class RobotData : public Object{
+class RobotData : public ObjectData{
   public :
     RobotData();
   private :
-    QPointF goal_position;
-    qreal goal_angle;
-    ControlPoints controlPoint;
+    QPointF _goalPos;
+    qreal _goalAngle;
+    ControlPoints _controlPoints;
   public :
-    QPointF* getGoal_position();
-    qreal* getGoal_angle();
-    ControlPoints* getControlPoint();
+    QPointF* goalPos();
+    qreal goalAngle();
+    ControlPoints* controlPoints();
+    void setGoalPos(QPointF*);
+    void setGoalAngle(qreal);
 };
 
-
-class Modul{
+class Parser{
   public :
-    Modul();
+    Parser();
   private :
     vector<ObstacleData> obstacle;
     vector<RobotData> robot;
     int setNumOf(string*);
-    void setControl(string*, Object*);
-    void setPosition(string*, Object*, STATE);
+    void setControl(string*, ObjectData*);
+    void setPosition(string*, ObjectData*, STATE);
   public :
     void read_file(string*, INPUT);
     vector<ObstacleData>* getObstacles();
     vector<RobotData>* getRobots();
+};
+
+/* View */
+
+class Window{
+  public :
+    Window(vector<RobotData>*, vector<ObstacleData>*);
+    vector<RobotData>* robots;
+    vector<ObstacleData>* obstacles;
+  private :
+    void productWindow();
 };
 
 class PainterWidget : public QGraphicsView{
@@ -83,11 +96,9 @@ class PainterWidget : public QGraphicsView{
     void scaleView(qreal);
 };
 
-class Obstacle : public QGraphicsItem{
+class ObjectItem : public QGraphicsItem{
   public:
-    Obstacle();
-    Obstacle(PainterWidget*);
-    Obstacle(PainterWidget*,ObstacleData);
+    ObjectItem(PainterWidget*,ObjectData*, ROBOT_POS);
     QPainterPath shape() const;
     QRectF boundingRect() const;
     void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
@@ -99,35 +110,7 @@ class Obstacle : public QGraphicsItem{
   private:
     QPointF pressPos;
     PainterWidget *graph;
-    ObstacleData dataset;
-    const vector<QPolygonF> mask;
+    ObjectData* dataset;
+    const QVector<QPolygonF> mask;
+    ROBOT_POS robot_pos;
 };
-class View{
-  public :
-    View(vector<RobotData>*, vector<ObstacleData>*);
-    vector<RobotData>* robots;
-    vector<ObstacleData>* obstacles;
-  private :
-    void productWindow();
-};
-
-
-/*
-class Robot : public QGraphicsItem{
-  public:
-    Robot(ViewPort*);
-    Robot(ViewPort*, RobotData);
-    bool advance();
-    QRectF boundingRect() const;
-    QPainterPath shape() const;
-    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
-    void initPos();
-  protected:
-    QVariant itemChange(GraphicsItemChange, const QVariant&);
-    void mousePressEvent(QGraphicsSceneMouseEvent*);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent*);
-  private:
-    QPointF newPos;
-    ViewPort *graph;
-    RobotData dataset;
-};*/
