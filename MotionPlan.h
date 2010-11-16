@@ -63,8 +63,8 @@ class Parser{
   public :
     Parser();
   private :
-    vector<ObstacleData> obstacle;
-    vector<RobotData> robot;
+    vector<RobotData> robots;
+    vector<ObstacleData> obstacles;
     int setNumOf(string*);
     void setControl(string*, ObjectData*);
     void setPosition(string*, ObjectData*, STATE);
@@ -113,4 +113,13 @@ class ObjectItem : public QGraphicsItem{
     ObjectData* dataset;
     const QVector<QPolygonF> mask;
     ROBOT_POS robot_pos;
+};
+
+//Controller
+class Bitmap{
+  public :
+    Bitmap();
+    void setObstacles(vector<ObstacleData>*);
+  private :
+    int _bitmap[128][128];
 };

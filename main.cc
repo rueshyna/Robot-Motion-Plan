@@ -6,13 +6,17 @@ int main (int argc, char *argv[]){
   string obstacle("obstacle");
   vector<RobotData> *robots;
   vector<ObstacleData> *obstacles;
-  Parser *modul = new Parser();
+  Parser *parser = new Parser();
 
-  modul->read_file(&robot, ROBOT);
-  robots = modul->getRobots();
-  modul->read_file(&obstacle, OBSTACLE);
-  obstacles = modul->getObstacles();
+  parser->read_file(&robot, ROBOT);
+  robots = parser->getRobots();
+  parser->read_file(&obstacle, OBSTACLE);
+  obstacles = parser->getObstacles();
 
+  Bitmap *map = new Bitmap();
+  map->setObstacles(obstacles);
   Window *view = new Window(robots,obstacles);
+
+
   return app.exec();
 }

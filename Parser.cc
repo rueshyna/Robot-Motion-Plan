@@ -1,10 +1,19 @@
 #include "MotionPlan.h"
 
 Parser::Parser(){}
-vector<ObstacleData>* Parser::getObstacles(){return &obstacle;}
-vector<RobotData>* Parser::getRobots(){return &robot;}
+vector<ObstacleData>* Parser::getObstacles(){return &obstacles;}
+vector<RobotData>* Parser::getRobots(){return &robots;}
 
 void Parser::read_file(string* _file, INPUT file) {
+  switch(file){
+    case ROBOT :
+      robots.clear();
+      break;
+    case OBSTACLE :
+      obstacles.clear();
+      break;
+    default : break;
+  }
   ifstream object_file(_file->c_str());
   string line("");
   int num_of_objects(0);
@@ -80,7 +89,7 @@ void Parser::read_file(string* _file, INPUT file) {
             case OBSTACLE:
               states = NUM_OF_POLYGONS;
               num_of_objects -= 1;
-              obstacle.push_back(*object);
+              obstacles.push_back(*object);
               break;
             default : break;
           }
@@ -98,7 +107,7 @@ void Parser::read_file(string* _file, INPUT file) {
             num_of_control_points -= 1;
             if(num_of_control_points == 0){
               RobotData* r = static_cast<RobotData*>(object);
-              robot.push_back(*r);
+              robots.push_back(*r);
               states = NUM_OF_POLYGONS;
               num_of_objects -=1;
             }
