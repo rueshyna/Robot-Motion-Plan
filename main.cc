@@ -13,9 +13,7 @@ int main (int argc, char *argv[]){
   parser->read_file(&obstacle, OBSTACLE);
   obstacles = parser->getObstacles();
 
-  Bitmap *map = new Bitmap();
-  map->setObstacles(obstacles);
-  Window *window = new Window(robots,obstacles, map);
+  Window *window = new Window(robots,obstacles);
 
   return app.exec();
 }

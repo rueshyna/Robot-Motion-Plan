@@ -7,10 +7,13 @@
 #include <cstring>
 #include <string>
 
-#define SCREEN_WIDTH 400
-#define SCREEN_HIGHT 400
+#define SCREEN_WIDTH 128*SCALE
+#define SCREEN_HIGHT 128*SCALE
 #define SCALE 3
-#define M 200
+#define PF_WIDTH 128*PF_SCALE
+#define PF_HIGHT 128*PF_SCALE
+#define PF_SCALE 2
+#define M 255
 
 using std::vector;
 using std::string;
@@ -99,12 +102,11 @@ class PFwindow : public QGraphicsView{
 class Window : public QObject{
   Q_OBJECT
   public :
-    Window(vector<RobotData>*, vector<ObstacleData>*, Bitmap*);
+    Window(vector<RobotData>*, vector<ObstacleData>*);
     QPushButton* PFbutton();
   public slots:
     void showPF();
   private :
-    Bitmap *map;
     vector<RobotData>* robots;
     vector<ObstacleData>* obstacles;
     void productWindow();

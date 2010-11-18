@@ -1,6 +1,6 @@
 #include "MotionPlan.h"
 
-Window::Window(vector<RobotData>* _robots, vector<ObstacleData>* _obstacles, Bitmap* _map): robots(_robots), obstacles(_obstacles), map(_map){
+Window::Window(vector<RobotData>* _robots, vector<ObstacleData>* _obstacles): robots(_robots), obstacles(_obstacles){
 
   _PFbutton = new QPushButton("PF");
   b2 = new QPushButton("b2");
@@ -20,13 +20,10 @@ void Window::productWindow(){
   QGraphicsScene* scene = new QGraphicsScene(0, 0, SCREEN_WIDTH, SCREEN_HIGHT);
 
   PainterWidget* pwidget = new PainterWidget(scene,robots,obstacles);
-  scene->sceneRect().setCoords(0,SCREEN_HIGHT, SCREEN_WIDTH,0);
 
-  //QVector<ObjectItem*> drawObstacles;
   for(vector<ObstacleData>::iterator iter=obstacles->begin(); iter!=obstacles->end() ;++iter){
     ObjectItem *obs = new ObjectItem(pwidget, &(*iter),NONE);
     scene->addItem(obs);
-    //drawObstacles.push_back(obs);
   }
 
   for(vector<RobotData>::iterator iter=robots->begin(); iter!=robots->end() ;++iter){
@@ -54,6 +51,8 @@ void Window::productWindow(){
   QObject::connect(PFbutton(),SIGNAL(clicked()), this, SLOT(showPF()));
 }
 void Window::showPF(){
+  Bitmap *map = new Bitmap();
+  map->setObstacles(obstacles);
   for(vector<RobotData>::iterator i=robots->begin(); i!=robots->end(); ++i){
     QTransform matrix;
     matrix = matrix.rotate(i->goalAngle());
@@ -64,7 +63,7 @@ void Window::showPF(){
 
       QVBoxLayout *vlayout = new QVBoxLayout;
       QWidget* window = new QWidget();
-      QGraphicsScene* scene = new QGraphicsScene(0, 0, 300, 300);
+      QGraphicsScene* scene = new QGraphicsScene(0, -PF_HIGHT, PF_WIDTH, PF_HIGHT);
       PFwindow* _pf = new PFwindow(scene);
       BitmapItem* mapItem = new BitmapItem(_pf, bmap);
       scene->addItem(mapItem);
@@ -76,7 +75,7 @@ void Window::showPF(){
       vlayout->addWidget(_pf);
       window->setLayout(vlayout);
       window->setWindowTitle("Potential Field");
-      window->resize(400,400);
+      window->resize(PF_WIDTH+100, PF_HIGHT+100);
       window->show();
       //cout <<"map: " <<endl;
      // for(int k=0; k!=128; ++k){
