@@ -56,14 +56,21 @@ void Bitmap::setObstacles(vector<ObstacleData>* obs){
           if(_x < 128 && _y < 128 && _x >= 0 &&_y>=0){
             _bitmap[_y][_x] = -1;
           }
+          if(_x >= 128 && _y >= 128){
+            _x=127;
+            _y=127;
+          }
+          if(_x < 0 && _y <0){
+            _x=0;
+            _y=0;
+          }
+          if(_y < (yMin[_x])){
+            yMin[_x] = _y;
+          }
 
-            if(_y < (yMin[_x])){
-              yMin[_x] = _y;
-            }
-
-            if(_y > (yMax[_x])){
-              yMax[_x] = _y;
-            }
+          if(_y > (yMax[_x])){
+            yMax[_x] = _y;
+          }
         }
       }
       for(int i = xMin; i != xMax; ++i){
