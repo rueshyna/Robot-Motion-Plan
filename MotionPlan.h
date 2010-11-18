@@ -10,6 +10,7 @@
 #define SCREEN_WIDTH 400
 #define SCREEN_HIGHT 400
 #define SCALE 3
+#define M 200
 
 using std::vector;
 using std::string;
@@ -74,15 +75,43 @@ class Parser{
     vector<RobotData>* getRobots();
 };
 
+
+//Controller
+class Bitmap{
+  public :
+    Bitmap();
+    void setObstacles(vector<ObstacleData>*);
+    vector< vector<int> > NF1(QPointF*);
+  private :
+    vector< vector<int> > _bitmap;
+};
+
 /* View */
 
-class Window{
+class PFwindow : public QGraphicsView{
   public :
-    Window(vector<RobotData>*, vector<ObstacleData>*);
+    PFwindow(QGraphicsScene*);
+  protected :
+    void keyPressEvent(QKeyEvent*);
+    void scaleView(qreal);
+};
+
+class Window : public QObject{
+  Q_OBJECT
+  public :
+    Window(vector<RobotData>*, vector<ObstacleData>*, Bitmap*);
+    QPushButton* PFbutton();
+  public slots:
+    void showPF();
+  private :
+    Bitmap *map;
     vector<RobotData>* robots;
     vector<ObstacleData>* obstacles;
-  private :
     void productWindow();
+    QPushButton *_PFbutton;
+    QPushButton *b2;
+    QPushButton *b3;
+    QPushButton *b4;
 };
 
 class PainterWidget : public QGraphicsView{
@@ -94,6 +123,15 @@ class PainterWidget : public QGraphicsView{
   protected :
     void keyPressEvent(QKeyEvent*);
     void scaleView(qreal);
+};
+class BitmapItem : public QGraphicsItem{
+  public :
+    BitmapItem(PFwindow*);
+    BitmapItem(PFwindow*, vector< vector<int> >);
+    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
+    QRectF boundingRect() const;
+  private :
+    vector< vector<int> > bitmap;
 };
 
 class ObjectItem : public QGraphicsItem{
@@ -113,13 +151,4 @@ class ObjectItem : public QGraphicsItem{
     ObjectData* dataset;
     const QVector<QPolygonF> mask;
     ROBOT_POS robot_pos;
-};
-
-//Controller
-class Bitmap{
-  public :
-    Bitmap();
-    void setObstacles(vector<ObstacleData>*);
-  private :
-    int _bitmap[128][128];
 };

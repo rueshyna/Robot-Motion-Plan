@@ -15,8 +15,7 @@ int main (int argc, char *argv[]){
 
   Bitmap *map = new Bitmap();
   map->setObstacles(obstacles);
-  Window *view = new Window(robots,obstacles);
-
+  Window *window = new Window(robots,obstacles, map);
 
   return app.exec();
 }
