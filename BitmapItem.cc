@@ -2,7 +2,7 @@
 
 BitmapItem::BitmapItem(PFwindow* graphView){}
 BitmapItem::BitmapItem(PFwindow* graphView, vector< vector<int> > _bitmap):bitmap(_bitmap){
-  setScale(2);
+  setScale(PF_SCALE);
   setCacheMode(DeviceCoordinateCache);
   setZValue(-1);
 }
@@ -34,4 +34,5 @@ void BitmapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidg
 }
 QRectF BitmapItem::boundingRect() const{
    return QRectF(0, -PF_HIGHT, PF_WIDTH, PF_HIGHT);
+   //return QRectF(-500, -500, 1000, 1000);
 }

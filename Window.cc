@@ -15,8 +15,7 @@ void Window::productWindow(){
   QWidget* window = new QWidget();
   window->setWindowTitle("MotionPlan");
   window->resize(SCREEN_HIGHT,SCREEN_WIDTH);
-  QGridLayout *blayout = new QGridLayout;
-  QVBoxLayout *vlayout = new QVBoxLayout;
+  QGridLayout *layout = new QGridLayout;
   QGraphicsScene* scene = new QGraphicsScene(0, 0, SCREEN_WIDTH, SCREEN_HIGHT);
 
   PainterWidget* pwidget = new PainterWidget(scene,robots,obstacles);
@@ -33,19 +32,19 @@ void Window::productWindow(){
     scene->addItem(r_init);
     //drawObstacles.push_back(obs);
   }
-
+  scene->addRect(0, 0, SCREEN_WIDTH, SCREEN_HIGHT,QColor(230, 200, 1));
   pwidget->setRenderHint(QPainter::Antialiasing);
   pwidget->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
   pwidget->setBackgroundBrush(QColor(230, 200, 167));
 
-  vlayout->addWidget(pwidget);
-  blayout->addWidget(_PFbutton,1,0);
-  blayout->addWidget(b2,1,1);
-  blayout->addWidget(b3,1,2);
-  blayout->addWidget(b4,1,3);
-  vlayout->addLayout(blayout);
-  window->setLayout(vlayout);
-  window->resize(SCREEN_WIDTH+100, SCREEN_HIGHT+100);
+  layout->addWidget(pwidget,0,0,1,4);
+  layout->addWidget(_PFbutton,1,0);
+  layout->addWidget(b2,1,1);
+  layout->addWidget(b3,1,2);
+  layout->addWidget(b4,1,3);
+
+  window->setLayout(layout);
+  window->resize(SCREEN_WIDTH+50, SCREEN_HIGHT+70);
   window->show();
 
   QObject::connect(PFbutton(),SIGNAL(clicked()), this, SLOT(showPF()));
@@ -75,7 +74,7 @@ void Window::showPF(){
       vlayout->addWidget(_pf);
       window->setLayout(vlayout);
       window->setWindowTitle("Potential Field");
-      window->resize(PF_WIDTH+100, PF_HIGHT+100);
+   //   window->resize(scene->width(), scene->height());
       window->show();
       //cout <<"map: " <<endl;
      // for(int k=0; k!=128; ++k){

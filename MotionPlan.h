@@ -12,7 +12,7 @@
 #define SCALE 3
 #define PF_WIDTH 128*PF_SCALE
 #define PF_HIGHT 128*PF_SCALE
-#define PF_SCALE 2
+#define PF_SCALE 3
 #define M 255
 
 using std::vector;

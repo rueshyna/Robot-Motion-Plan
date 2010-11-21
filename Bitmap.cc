@@ -37,6 +37,31 @@ void Bitmap::setObstacles(vector<ObstacleData>* obs){
           p2 = matrix.map(*j->begin())+ *i->initPos();
         }
 
+        if(p1.x() > 127){
+          p1.setX(127);
+        }
+        if(p1.y() > 127){
+          p1.setY(127);
+        }
+        if(p1.x() < 0){
+          p1.setX(0);
+        }
+        if(p2.y() < 0){
+          p2.setY(0);
+        }
+        if(p2.x() > 127){
+          p2.setX(127);
+        }
+        if(p2.y() > 127){
+          p2.setY(127);
+        }
+        if(p2.x() < 0){
+          p2.setX(0);
+        }
+        if(p2.y() < 0){
+          p2.setY(0);
+        }
+
         if(p1.x() < xMin){
             xMin = p1.x();
         }
@@ -53,17 +78,19 @@ void Bitmap::setObstacles(vector<ObstacleData>* obs){
           int _x = (p1.x())-(dx/d)*l;
           int _y = (p1.y())-(dy/d)*l;
 
-          if(_x < 128 && _y < 128 && _x >= 0 &&_y>=0){
-            _bitmap[_y][_x] = -1;
-          }
-          if(_x >= 128 && _y >= 128){
+          if(_x > 127){
             _x=127;
+          }
+          if( _y > 127){
             _y=127;
           }
-          if(_x < 0 && _y <0){
+          if(_x < 0) {
             _x=0;
+          }
+          if(_y < 0){
             _y=0;
           }
+          _bitmap[_y][_x] = -1;
           if(_y < (yMin[_x])){
             yMin[_x] = _y;
           }
@@ -75,9 +102,7 @@ void Bitmap::setObstacles(vector<ObstacleData>* obs){
       }
       for(int i = xMin; i != xMax; ++i){
         for(int j = yMax[i] - yMin[i]; j!= 0 ; --j ){
-          if(yMax[i]-j < 128 && i < 128 && yMax[i]-j>=0 && i>=0){
             _bitmap[yMax[i]-j][i] = -1;
-          }
         }
       }
     }
