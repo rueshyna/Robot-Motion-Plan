@@ -42,6 +42,7 @@ void Window::productWindow(){
   layout->addWidget(b2,1,1);
   layout->addWidget(b3,1,2);
   layout->addWidget(b4,1,3);
+  layout->setSizeConstraint(QLayout::SetFixedSize);
 
   window->setLayout(layout);
   window->resize(SCREEN_WIDTH+50, SCREEN_HIGHT+70);
