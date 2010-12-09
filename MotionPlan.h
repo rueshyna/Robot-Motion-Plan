@@ -47,7 +47,7 @@ class ObjectData{
 
 typedef ObjectData ObstacleData;
 typedef QVector<QPoint> ControlPoints;
-
+class BitmapItem;
 class RobotData : public ObjectData{
   public :
     RobotData();
@@ -55,12 +55,15 @@ class RobotData : public ObjectData{
     QPointF _goalPos;
     qreal _goalAngle;
     ControlPoints _controlPoints;
+    BitmapItem* _bitmapItem;
   public :
     QPointF* goalPos();
     qreal goalAngle();
+    BitmapItem* bitmapItem();
     ControlPoints* controlPoints();
     void setGoalPos(QPointF*);
     void setGoalAngle(qreal);
+    void setBitmapItem(BitmapItem*);
 };
 
 class Parser{
@@ -83,59 +86,56 @@ class Parser{
 class Bitmap{
   public :
     Bitmap();
-    void setObstacles(vector<ObstacleData>*);
-    vector< vector<int> > NF1(QPointF*);
-  private :
-    vector< vector<int> > _bitmap;
+    vector< vector<int> > setObstacles(vector<ObstacleData>*);
+    vector< vector<int> > NF1(QPointF*, vector< vector<int> >*);
 };
 
 /* View */
-
-class PFwindow : public QGraphicsView{
-  public :
-    PFwindow(QGraphicsScene*);
-  protected :
-    void keyPressEvent(QKeyEvent*);
-    void scaleView(qreal);
-};
 
 class Window : public QObject{
   Q_OBJECT
   public :
     Window(vector<RobotData>*, vector<ObstacleData>*);
-    QPushButton* PFbutton();
+    QPushButton* setButton();
+    QPushButton* resetButton();
+    QPushButton* showPathButton();
+    QPushButton* animationButton();
+    QPushButton* smoothButton();
+    QPushButton* prePfButton();
+    QPushButton* nextPfButton();
   public slots:
     void showPF();
   private :
     vector<RobotData>* robots;
     vector<ObstacleData>* obstacles;
     void productWindow();
-    QPushButton *_PFbutton;
-    QPushButton *b2;
-    QPushButton *b3;
-    QPushButton *b4;
+    QPushButton *_setButton;
+    QPushButton *_resetButton;
+    QPushButton *_showPathButton;
+    QPushButton *_animationButton;
+    QPushButton *_smoothButton;
+    QPushButton *_prePfButton;
+    QPushButton *_nextPfButton;
 };
 
 class PainterWidget : public QGraphicsView{
   Q_OBJECT
   public :
-    PainterWidget(QGraphicsScene* , vector<RobotData>*, vector<ObstacleData>*);
-    vector<RobotData>* robots;
-    vector<ObstacleData>* obstacles;
+    PainterWidget(QGraphicsScene*);
   protected :
     void keyPressEvent(QKeyEvent*);
     void scaleView(qreal);
 };
+
 class BitmapItem : public QGraphicsItem{
   public :
-    BitmapItem(PFwindow*);
-    BitmapItem(PFwindow*, vector< vector<int> >);
+    BitmapItem();
+    BitmapItem(vector< vector<int> >);
     void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
     QRectF boundingRect() const;
   private :
     vector< vector<int> > bitmap;
 };
-
 class ObjectItem : public QGraphicsItem{
   public:
     ObjectItem(PainterWidget*,ObjectData*, ROBOT_POS);

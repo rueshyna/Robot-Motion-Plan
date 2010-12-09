@@ -14,6 +14,7 @@ int main (int argc, char *argv[]){
   obstacles = parser->getObstacles();
 
   Window *window = new Window(robots,obstacles);
+//window->showPF();
 
   return app.exec();
 }

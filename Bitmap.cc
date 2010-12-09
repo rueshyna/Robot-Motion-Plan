@@ -1,19 +1,19 @@
 #include "MotionPlan.h"
 #include <algorithm>
 #include <cstdlib>
-#include <map>
 
 using std::max;
 using std::abs;
 
 Bitmap:: Bitmap(){
+}
+
+vector< vector< int > > Bitmap::setObstacles(vector<ObstacleData>* obs){
+  vector< vector<int> > _bitmap;
   for(int i = 0; i != 128; ++i){
     vector<int> i(128, M);
     _bitmap.push_back(i);
   }
-}
-
-void Bitmap::setObstacles(vector<ObstacleData>* obs){
   for(vector<ObstacleData>::iterator i = obs->begin(); i != obs->end(); ++i){
     for(QVector<QPolygonF>::iterator j = i->polygons()->begin(); j!= i->polygons()->end(); ++j){
       int xMin(127);
@@ -107,26 +107,25 @@ void Bitmap::setObstacles(vector<ObstacleData>* obs){
       }
     }
   }
+  return _bitmap;
 }
 
-vector< vector<int> > Bitmap::NF1(QPointF* goal){
-  vector< vector<int> > bitmap;
+vector< vector<int> > Bitmap::NF1(QPointF* goal, vector< vector<int> >* bitmap){
   QPoint increX(1.0,0.0);
   QPoint increY(0.0,1.0);
   QPoint decreX(-1.0,0.0);
   QPoint decreY(0.0,-1.0);
-  bitmap= _bitmap;
   QVector< QVector<QPointF> > list;
 
   for(int i = 0; i != 128; ++i){
     for(int j = 0; j != 128; ++j){
-      if(bitmap[j][i] != -1){
-        bitmap[j][i] = M;
+      if((*bitmap)[j][i] != -1){
+        (*bitmap)[j][i] = M;
       }
     }
   }
 
-  bitmap[goal->y()][goal->x()] = 0;
+  (*bitmap)[goal->y()][goal->x()] = 0;
 
   QVector<QPointF> v;
   v.push_back(QPoint(goal->x(), goal->y()));
@@ -137,26 +136,26 @@ vector< vector<int> > Bitmap::NF1(QPointF* goal){
     for(int j=0; j!=list.at(i).size(); ++j){
       QPointF neig1 = list.at(i).at(j)+increX;
       if(neig1.x()<128 && neig1.y()<128 && neig1.x()> -1 && neig1.y()>-1&& 
-         bitmap[neig1.y()][neig1.x()] == M){
-        bitmap[neig1.y()][neig1.x()] = i+1;
+         (*bitmap)[neig1.y()][neig1.x()] == M){
+        (*bitmap)[neig1.y()][neig1.x()] = i+1;
         vec.push_back(neig1);
       }
       QPointF neig2 = list.at(i).at(j)+increY;
       if(neig2.x()<128 && neig2.y()<128 &&  neig2.x()> -1 && neig2.y()>-1&&
-         bitmap[neig2.y()][neig2.x()] == M){
-        bitmap[neig2.y()][neig2.x()] = i+1;
+         (*bitmap)[neig2.y()][neig2.x()] == M){
+        (*bitmap)[neig2.y()][neig2.x()] = i+1;
         vec.push_back(neig2);
       }
       QPointF neig3 = list.at(i).at(j)+decreX;
       if(neig3.x()<128 && neig3.y()<128 &&  neig3.x()> -1 && neig3.y()>-1&&
-         bitmap[neig3.y()][neig3.x()] == M){
-        bitmap[neig3.y()][neig3.x()] = i+1;
+         (*bitmap)[neig3.y()][neig3.x()] == M){
+        (*bitmap)[neig3.y()][neig3.x()] = i+1;
         vec.push_back(neig3);
       }
       QPointF neig4 = list.at(i).at(j)+decreY;
       if(neig4.x()<128 && neig4.y()<128 && neig4.x()> -1 && neig4.y()>-1&&
-         bitmap[neig4.y()][neig4.x()] == M){
-        bitmap[neig4.y()][neig4.x()] = i+1;
+         (*bitmap)[neig4.y()][neig4.x()] == M){
+        (*bitmap)[neig4.y()][neig4.x()] = i+1;
         vec.push_back(neig4);
       }
     }
@@ -164,5 +163,5 @@ vector< vector<int> > Bitmap::NF1(QPointF* goal){
       list.push_back(vec);
     }
   }
-  return bitmap;
+  return *bitmap;
 }

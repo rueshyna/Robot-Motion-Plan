@@ -1,6 +1,6 @@
 #include "MotionPlan.h"
 
-PainterWidget::PainterWidget(QGraphicsScene* outscene,  vector<RobotData>* _robots, vector<ObstacleData>* _obstacles): robots(_robots), obstacles(_obstacles){
+PainterWidget::PainterWidget(QGraphicsScene* outscene){
   setScene(outscene);
   setCacheMode(CacheBackground);
   setViewportUpdateMode(BoundingRectViewportUpdate);
@@ -11,22 +11,11 @@ PainterWidget::PainterWidget(QGraphicsScene* outscene,  vector<RobotData>* _robo
 
 void PainterWidget::keyPressEvent(QKeyEvent* event){
   switch (event->key()) {
-   case Qt::Key_Up:
-       break;
-   case Qt::Key_Down:
-       break;
-   case Qt::Key_Left:
-       break;
-   case Qt::Key_Right:
-       break;
    case Qt::Key_Plus:
        scaleView(qreal(1.2));
        break;
    case Qt::Key_Minus:
        scaleView(1 / qreal(1.2));
-       break;
-   case Qt::Key_Space:
-   case Qt::Key_Enter:
        break;
    default:
        QGraphicsView::keyPressEvent(event);

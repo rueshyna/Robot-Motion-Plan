@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'MotionPlan.h'
 **
-** Created: Fri Nov 19 00:21:35 2010
+** Created: Thu Dec 9 22:18:03 2010
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.6.2)
 **
 ** WARNING! All changes made in this file will be lost!
