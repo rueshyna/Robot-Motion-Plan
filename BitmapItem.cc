@@ -6,6 +6,10 @@ BitmapItem::BitmapItem(vector< vector<int> > _bitmap):bitmap(_bitmap){
   //setCacheMode(DeviceCoordinateCache);
   setZValue(-1);
 }
+void BitmapItem::setBitmap(vector< vector<int> > _bitmap){
+  bitmap = _bitmap;
+  update();
+}
 void BitmapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*){
   QTransform matrix;
   matrix = matrix.rotate(-90);

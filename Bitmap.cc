@@ -1,5 +1,4 @@
 #include "MotionPlan.h"
-#include <algorithm>
 #include <cstdlib>
 
 using std::max;

@@ -1,14 +1,13 @@
 #include "MotionPlan.h"
 
-Window::Window(vector<RobotData>* _robots, vector<ObstacleData>* _obstacles): robots(_robots), obstacles(_obstacles){
-
+Window::Window(vector<RobotData>* _robots, vector<ObstacleData>* _obstacles): robots(_robots), obstacles(_obstacles), viewPf(0){
   _setButton = new QPushButton("Set");
   _resetButton = new QPushButton("Reset");
   _showPathButton = new QPushButton("Show Path");
   _animationButton = new QPushButton("Animation");
   _smoothButton = new QPushButton("Smooth");
-  _prePfButton = new QPushButton("PF pre");
-  _nextPfButton = new QPushButton("PF next");
+  _prePfButton = new QPushButton("PF Pre");
+  _nextPfButton = new QPushButton("PF Next");
   productWindow();
 }
 
@@ -26,10 +25,10 @@ void Window::productWindow(){
   window->resize(SCREEN_HIGHT,SCREEN_WIDTH);
   QGridLayout *layout = new QGridLayout;
 
-  QGraphicsScene* mainScene = new QGraphicsScene(0, 0, SCREEN_WIDTH, SCREEN_HIGHT);
+  mainScene = new QGraphicsScene(0, 0, SCREEN_WIDTH, SCREEN_HIGHT);
   PainterWidget* mainWidget = new PainterWidget(mainScene);
 
-  QGraphicsScene* pfScene = new QGraphicsScene(0, -PF_HIGHT, PF_WIDTH, PF_HIGHT);
+  pfScene = new QGraphicsScene(0, -PF_HIGHT, PF_WIDTH, PF_HIGHT);
   PainterWidget* pfWidget = new PainterWidget(pfScene);
 
   for(vector<ObstacleData>::iterator iter=obstacles->begin(); iter!=obstacles->end() ;++iter){
@@ -45,7 +44,7 @@ void Window::productWindow(){
   }
 
   mainWidget->setBackgroundBrush(QColor(230, 200, 167));
-  pfWidget->setBackgroundBrush(QColor(230, 200, 167));
+  pfWidget->setBackgroundBrush(QColor(180, 200, 167));
 
   layout->addWidget(mainWidget,0,0,1,4);
   layout->addWidget(pfWidget,0,4,1,8);
@@ -53,7 +52,7 @@ void Window::productWindow(){
   layout->addWidget(resetButton(),1,1);
   layout->addWidget(showPathButton(),1,2);
   layout->addWidget(animationButton(),1,3);
-  layout->addWidget(smoothButton(),1,4);
+  layout->addWidget(smoothButton(),2,0);
   layout->addWidget(prePfButton(),1,7);
   layout->addWidget(nextPfButton(),1,8);
   layout->setSizeConstraint(QLayout::SetFixedSize);
@@ -61,13 +60,8 @@ void Window::productWindow(){
   window->setLayout(layout);
   window->resize(SCREEN_WIDTH+50, SCREEN_HIGHT+70);
   window->show();
-//  QObject::connect(PFbutton(),SIGNAL(clicked()), this, SLOT(showPF()));
-  showPF();
-  pfScene->addItem(robots->at(1).bitmapItem());
-}
-void Window::showPF(){
-  Bitmap *map = new Bitmap();
-  vector< vector<int> > bmap =  map->setObstacles(obstacles);
+
+  vector< vector<int> > bmap =  Bitmap::setObstacles(obstacles);
 
   for(vector<RobotData>::iterator i=robots->begin(); i!=robots->end(); ++i){
    // QTransform matrix;
@@ -75,11 +69,40 @@ void Window::showPF(){
     //for(ControlPoints::iterator j=i->controlPoints()->begin(); j!=i->controlPoints()->end(); ++j){
       //QPointF p = matrix.map(*j)+ *i->goalPos();
 
-      i->setBitmapItem(new BitmapItem(map->NF1(i->goalPos(), &bmap)));
+      i->setBitmapItem(new BitmapItem(Bitmap::NF1(i->goalPos(), &bmap)));
+      if(i==robots->begin()){
+        i->bitmapItem()->show();
+      }else{
+        i->bitmapItem()->hide();
+      }
+      pfScene->addItem(i->bitmapItem());
 
     //}
   }
 
+  QObject::connect(setButton(),SIGNAL(clicked()), this, SLOT(showPf()));
+  QObject::connect(prePfButton(),SIGNAL(clicked()), this, SLOT(prePf()));
+  QObject::connect(nextPfButton(),SIGNAL(clicked()), this, SLOT(nextPf()));
+  //showPF();
+}
+void Window::prePf(){
+  if(viewPf > 0){
+    robots->at(viewPf--).bitmapItem()->hide();
+    robots->at(viewPf).bitmapItem()->show();
+  }
+}
+void Window::nextPf(){
+  if(viewPf < robots->size()-1){
+    robots->at(viewPf++).bitmapItem()->hide();
+    robots->at(viewPf).bitmapItem()->show();
+  }
+}
+void Window::showPf(){
+  vector< vector<int> > bmap =  Bitmap::setObstacles(obstacles);
+
+  for(vector<RobotData>::iterator i=robots->begin(); i!=robots->end(); ++i){
+    i->bitmapItem()->setBitmap(Bitmap::NF1(i->goalPos(), &bmap));
+  }
 /*  Bitmap *map = new Bitmap();
   map->setObstacles(obstacles);
 
