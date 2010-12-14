@@ -35,6 +35,9 @@ class Window;
 class ObjectItem;
 class BitmapItem;
 class PainterWidge;
+class VectorFrom;
+class CSpace;
+
 #include "Data.h"
 #include "Algorithm.h"
 #include "View.h"

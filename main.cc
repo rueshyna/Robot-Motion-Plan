@@ -19,6 +19,6 @@ int main (int argc, char *argv[]){
 //QPointF p2 = robots->at(0).polygons()->at(0).at(1);
 
  //QPointF p = CSpace::edgeVector(&p1, &p2, &QPointF(0,0));
-//  CSpace::cObstacle(&robots->at(0),obstacles);
+ QVector< QVector <QVector<int> > > a = CSpace::cObstacle(&robots->at(0),obstacles);
   return app.exec();
 }

@@ -11,12 +11,28 @@ class Bitmap{
 class CSpace{
   private :
     CSpace();
-    static QPointF edgeVector(QPointF*, QPointF*, QPointF*);
-    static int countAngle(double*, double*);
-    static bool sortF(const QPointF,const QPointF);
+    static VectorFrom edgeVector(QPointF*, QPointF*, QPointF*, INPUT);
+    static double countAngle(double*, double*);
+    static bool sortF(VectorFrom,VectorFrom);
+    static void findVector(vector<VectorFrom>*, QPolygonF*, INPUT);
+    static void sortByAngle(vector<VectorFrom>*);
+    static bool minIndex(double, double);
   public :
-    static void sortByAngle(vector<QPointF>*);
     static QVector< QVector <QVector<int> > > cObstacle(RobotData*, vector<ObstacleData>*);
   
+};
+
+class VectorFrom : public QPointF{
+  private :
+    int _from;
+    double _angle;
+  public :
+    VectorFrom();
+    VectorFrom(double, double);
+    VectorFrom(double, double, int);
+    int from();
+    void setFrom(int);
+    double angle();
+    void setAngle(double);
 };
 #endif
