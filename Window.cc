@@ -8,7 +8,7 @@ Window::Window(vector<RobotData>* _robots, vector<ObstacleData>* _obstacles): ro
   _smoothButton = new QPushButton("Smooth");
   _prePfButton = new QPushButton("PF Pre");
   _nextPfButton = new QPushButton("PF Next");
-  productWindow();
+  //productWindow();
 }
 
 QPushButton* Window::setButton(){return _setButton;};
