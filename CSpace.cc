@@ -24,8 +24,12 @@ VectorFrom CSpace::edgeVector(QPointF* p1 , QPointF* p2, QPointF* center, INPUT 
 
 double CSpace::countAngle(double* sinAngle, double*cosAngle){
   double angle(*sinAngle);
-  if(*sinAngle < 0){
-    //angle = 360.0-*cosAngle;
+  if(*sinAngle >= 0){
+    angle = *cosAngle;
+  }else if(*sinAngle < 0 && *cosAngle >= 0 && *cosAngle <= 90){
+    angle = 360.0+*sinAngle;
+  }else if(*sinAngle < 0 && *cosAngle > 90 && *cosAngle <= 180){
+    angle = 180.0-*sinAngle;
   }
   return angle;
 }
@@ -68,7 +72,6 @@ void CSpace::findVector(vector<VectorFrom>* v, QPolygonF* p, INPUT object){
 
     double sinAngle((asin(vectorFrom.y()/sqrt(pow(vectorFrom.x(),2.0)+pow(vectorFrom.y(),2.0))))*180.0/M_PI);
     double cosAngle((acos(vectorFrom.x()/sqrt(pow(vectorFrom.x(),2.0)+pow(vectorFrom.y(),2.0))))*180.0/M_PI);
-//cout << "vectorFrom" << vectorFrom.y()<< " " << vectorFrom.x()<<endl;
     vectorFrom.setAngle(countAngle(&sinAngle, &cosAngle));
     vectorFrom.setFrom(countFrom++);
     v->push_back(vectorFrom);
@@ -87,7 +90,7 @@ QVector< QVector <QVector<int> > > CSpace::cObstacle(RobotData* robot, vector<Ob
     vector<VectorFrom> robotVector;
 
     findVector(&robotVector, &*i, ROBOT);
-    //sortByAngle(&robotVector);
+    sortByAngle(&robotVector);
 
     //each obstacle
     for(vector<ObstacleData>::iterator j = obstacles->begin(); j != obstacles->end(); ++j){
@@ -95,8 +98,8 @@ QVector< QVector <QVector<int> > > CSpace::cObstacle(RobotData* robot, vector<Ob
       //each polygons
       for(QVector<QPolygonF>::iterator k = j->polygons()->begin(); k!=j->polygons()->end(); ++k){
         findVector(&obstacleVector, &*k, OBSTACLE);
-        //sortByAngle(&obstacleVector);
-        
+        sortByAngle(&obstacleVector);
+
         vector<VectorFrom>::iterator start;
         QPolygonF oPolygon;
         double b(500);
@@ -108,7 +111,7 @@ QVector< QVector <QVector<int> > > CSpace::cObstacle(RobotData* robot, vector<Ob
             b = abs(obstacleVector.at(0).angle()-l->angle());
           }
         }
-        for(vector<VectorFrom>::iterator l = obstacleVector.begin(); l!=obstacleVector.end(); ++l){
+/*        for(vector<VectorFrom>::iterator l = obstacleVector.begin(); l!=obstacleVector.end(); ++l){
 //          cout << "vector a" << k->at(l->from()).x()<<" "<<k->at(l->from()).y()<<endl;;
 //          cout << "vector b" << (k+1)->at(l->from()).x()<<" "<<(k+1)->at(l->from()).y();
           cout << "obstacle from " <<l->from()<< endl;
@@ -118,6 +121,7 @@ QVector< QVector <QVector<int> > > CSpace::cObstacle(RobotData* robot, vector<Ob
           cout <<"robot from " <<l->from()<< endl;
           cout <<"robot angle " <<l->angle()<< endl;
         }
+        */
         int count = 0;
         for(vector<VectorFrom>::iterator l = obstacleVector.begin(); l!=obstacleVector.end(); ++l){
         //  cout << "xxx" <<endl;
