@@ -64,7 +64,7 @@ void Bitmap::setObstacle(vector< vector<int> >* _bitmap, QPolygonF* polygon, dou
     double dx(p1.x() - p2.x());
     double dy(p1.y() - p2.y());
     double d(max(abs(dx), abs(dy)));
-    int _d(static_cast<int>(d+0.5));
+    int _d(static_cast<int>(d+0.9));
 
     for(int l=0; l != _d; ++l){
       int _x = (p1.x())-(dx/d)*l;

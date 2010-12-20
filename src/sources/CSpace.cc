@@ -74,96 +74,160 @@ void CSpace::findVector(vector<VectorFrom>* v, QPolygonF* p, INPUT object){
     double cosAngle((acos(vectorFrom.x()/sqrt(pow(vectorFrom.x(),2.0)+pow(vectorFrom.y(),2.0))))*180.0/M_PI);
     vectorFrom.setAngle(countAngle(&sinAngle, &cosAngle));
     vectorFrom.setFrom(countFrom++);
+    vectorFrom.setInput(object);
     v->push_back(vectorFrom);
   }
-  countFrom = 0;
 }
 
 vector< vector < vector<int> > > CSpace::cObstacle(RobotData* robot, vector<ObstacleData>* obstacles){
   vector< vector <vector<int> > > cspace;
-  vector< vector<int> > temp2;
-  for(int i = 0; i != 128; ++i){
-    vector<int> temp1(128, 0);
-    temp2.push_back(temp1);
-  }
+//  for(size_t h = 0; h< 360; ++h){
 
-  //each polygons of robot
-  for(QVector<QPolygonF>::iterator i = robot->polygons()->begin(); i != robot->polygons()->end(); ++i){
-    vector<VectorFrom> robotVector;
+    vector< vector<int> > temp2;
+    for(int i = 0; i != 128; ++i){
+      vector<int> temp1(128, 0);
+      temp2.push_back(temp1);
+    }
 
-    findVector(&robotVector, &*i, ROBOT);
-    sortByAngle(&robotVector);
+    QTransform rMatrix;
+    rMatrix = rMatrix.rotate(90);
 
-    //each obstacle
-    for(vector<ObstacleData>::iterator j = obstacles->begin(); j != obstacles->end(); ++j){
-      vector<VectorFrom> obstacleVector;
-      //each polygons
-      for(QVector<QPolygonF>::iterator k = j->polygons()->begin(); k!=j->polygons()->end(); ++k){
-        findVector(&obstacleVector, &*k, OBSTACLE);
-        sortByAngle(&obstacleVector);
+    //each polygons of robot
+    for(QVector<QPolygonF>::iterator i = robot->polygons()->begin(); i != robot->polygons()->end(); ++i){
+      vector<VectorFrom> robotVector;
+      QPolygonF rPolygon;
 
-        vector<VectorFrom>::iterator start;
-        QPolygonF oPolygon;
-        double b(500);
-        //find the min angle betreen vector of obastacle and vector  of robot
-        for(vector<VectorFrom>::iterator l = robotVector.begin(); l!=robotVector.end()-1; ++l){
-          double a(abs(obstacleVector.at(0).angle()-l->angle()));
-          if(a <= b){
-            start = l;
-            b = abs(obstacleVector.at(0).angle()-l->angle());
+      for(QPolygonF::iterator j=i->begin(); j!=i->end(); ++j){
+        rPolygon << rMatrix.map(*j);
+      }
+
+      findVector(&robotVector, &rPolygon, ROBOT);
+      sortByAngle(&robotVector);
+
+      //each obstacle
+      for(vector<ObstacleData>::iterator j = obstacles->begin(); j != obstacles->end(); ++j){
+        vector<VectorFrom> obstacleVector;
+
+        //each polygons
+        for(QVector<QPolygonF>::iterator k = j->polygons()->begin(); k!=j->polygons()->end(); ++k){
+          QPolygonF oPolygon;
+          QTransform oMatrix;
+          oMatrix = oMatrix.rotate(j->initAngle());
+          for(QPolygonF::iterator l=k->begin(); l!=k->end(); ++l){
+            oPolygon << oMatrix.map(*l);
           }
-        }
-/*        for(vector<VectorFrom>::iterator l = obstacleVector.begin(); l!=obstacleVector.end(); ++l){
-//          cout << "vector a" << k->at(l->from()).x()<<" "<<k->at(l->from()).y()<<endl;;
-//          cout << "vector b" << (k+1)->at(l->from()).x()<<" "<<(k+1)->at(l->from()).y();
-          cout << "obstacle from " <<l->from()<< endl;
-          cout << "obstacle angle " <<l->angle()<< endl;
-        }
-        for(vector<VectorFrom>::iterator l = robotVector.begin(); l!=robotVector.end(); ++l){
-          cout <<"robot from " <<l->from()<< endl;
-          cout <<"robot angle " <<l->angle()<< endl;
-        }
-        */
-        int count(0);
-        int edgeCount(0);
-        for(vector<VectorFrom>::iterator l = obstacleVector.begin(); l!=obstacleVector.end(); ++l){
-        //  cout << "xxx" <<endl;
-          for(vector<VectorFrom>::iterator m = start; m!=robotVector.end(); ++m){
-            if(count < 2){
-              if(edgeCount++ < obstacleVector.size()+robotVector.size()){
-                QPointF p = k->at(l->from())- i->at(m->from());
-                oPolygon << p;
 
-                if(m == (robotVector.end()-1)){
-                  m=robotVector.begin();
-                }
+          findVector(&obstacleVector, &oPolygon, OBSTACLE);
+          sortByAngle(&obstacleVector);
+  //        for(int d=0; d<obstacleVector.size(); ++d){
+  //          cout << "o "<< obstacleVector[d].from()<<endl;
+  //        }
 
-                start = m;
-                ++count;
-              }else{
-                edgeCount=0;
-                break;
-              }
-            }else{
-              count=0;
-              break;
+          //vector<VectorFrom>::iterator start;
+          int start(-1);
+          QPolygonF newPolygon;
+          double b(500);
+          //find the min angle betreen vector of obastacle and vector  of robot
+          //for(vector<VectorFrom>::iterator l = robotVector.begin(); l!=robotVector.end()-1; ++l){
+          for(int l = 0; l!=robotVector.size()-1; ++l){
+           // double a(abs(obstacleVector.at(0).angle()-l->angle()));
+            double a(abs(obstacleVector.at(0).angle()-obstacleVector[l].angle()));
+            if(a <= b){
+              start = l;
+              //b = abs(obstacleVector.at(0).angle()-l->angle());
+              b = abs(obstacleVector.at(0).angle()-(robotVector)[l].angle());
             }
           }
+  //        vector<VectorFrom>::iterator temp;
+          //if(start == robotVector.begin()  ){
+          //  start =robotVector.end()-1;
+          //}else{
+          //  start= start-1;
+         // }
+//          if(abs(obstacleVector.at(0).angle()-(start+1)->angle())<=abs(obstacleVector.at(0).angle()-temp->angle())){
+        //   start=temp;
+        //  }
+//          QPointF p = oPolygon.at(obstacleVector.at(obstacleVector.size()-1).from())- rPolygon.at(robotVector.at(start).from());
+  //                newPolygon << p;
+
+          int count(1);
+          int edgeCount(0);
+//          for(vector<VectorFrom>::iterator l = obstacleVector.begin(); l!=obstacleVector.end(); ++l){
+            for(int l = 0; l!=obstacleVector.size(); ++l){
+             if(edgeCount < obstacleVector.size()+robotVector.size()){
+              vector<VectorFrom> temp = robotVector;
+              temp.push_back(obstacleVector.at(l));
+              sortByAngle(&temp);
+              int preIndex;
+              int nextIndex;
+              for(int m = 0; m <temp.size(); ++m){
+                if(temp.at(m).Input() == OBSTACLE){
+                  preIndex = ((m-1)==-1)?temp.size()-1:m-1;
+                  nextIndex = ((m+1)==temp.size())?0:m+1;
+
+                  if(abs(temp[m].angle()-temp[preIndex].angle())<abs(temp[m].angle()-temp[nextIndex].angle())){
+                  cout <<l<<" "<<preIndex<<endl;
+                    QPointF p = oPolygon.at(temp[m].from())- rPolygon.at(temp[preIndex].from());
+                    newPolygon << p;
+
+                  cout <<l <<" "<<nextIndex-1 <<endl;
+                     p = oPolygon.at(temp[m].from())- rPolygon.at(temp[nextIndex].from());
+                    newPolygon << p;
+                    edgeCount++;
+                    break;
+                  }else{
+                  cout <<l <<" "<<nextIndex-1 <<endl;
+                    QPointF p = oPolygon.at(temp[m].from())- rPolygon.at(temp[nextIndex].from());
+                    newPolygon << p;
+                  cout <<l<<" "<<preIndex<<endl;
+                     p = oPolygon.at(temp[m].from())- rPolygon.at(temp[preIndex].from());
+                    newPolygon << p;
+                    edgeCount++;
+                    break;
+                  }
+                }
+              }
+              }else{break;}
+  //          for(vector<VectorFrom>::iterator m = start; m!=robotVector.end(); (m == (robotVector.end()-1))?m=robotVector.begin():++m){
+  /*
+            for(int m = start; m!=robotVector.size(); (m == (robotVector.size()-1))?m=0:++m){
+              if(count < 2){
+                if(edgeCount < obstacleVector.size()+robotVector.size()){
+
+//                  QPointF p = oPolygon.at(l->from())- rPolygon.at(m->from());
+                  QPointF p = oPolygon.at(obstacleVector[l].from())- rPolygon.at(robotVector[m].from());
+//                  cout<<"o " <<oPolygon.at(obstacleVector[l].from()).x() <<" "<<oPolygon.at(obstacleVector[l].from()).y()<<endl;
+  //                cout <<"p " <<p.x() <<" " <<p.y()<<endl;
+  cout<< l<<" " <<m<<endl;
+                  newPolygon << p;
+
+                  //if(m == (robotVector.end()-1)){
+                  //  m=robotVector.begin();
+                 // }
+
+                  start = m;
+                  ++edgeCount;
+                  ++count;
+                }else{
+                  edgeCount=0;
+                  break;
+                }
+              }else{
+                count=0;
+                break;
+              }
+            }
+*/
+          }
+          Bitmap::setObstacle(&temp2, &newPolygon, 0, j->initPos());
+          cout <<"=============" <<endl;
+          obstacleVector.clear();
         }
-        Bitmap::setObstacle(&temp2, &oPolygon, j->initAngle(), j->initPos());
-        cout <<"=============" <<endl;
-        obstacleVector.clear();
       }
+      robotVector.clear();
     }
-    robotVector.clear();
-  }
-  for(int i =0; i<128; ++i){
-    for(int j =0; j<128; ++j){
-      cout << temp2[i][j];
-    }
-    cout <<endl;
-  }
-  cspace.push_back(temp2);
+    cspace.push_back(temp2);
+  //}
   return cspace;
 }
 
@@ -174,3 +238,5 @@ int VectorFrom::from(){return _from;}
 void VectorFrom::setFrom(int _from_){_from = _from_;}
 double VectorFrom::angle(){return _angle;}
 void VectorFrom::setAngle(double _angle_){_angle = _angle_;}
+INPUT VectorFrom::Input(){return _input;}
+void VectorFrom::setInput(INPUT _input_){_input = _input_;}

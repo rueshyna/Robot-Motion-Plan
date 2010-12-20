@@ -1,6 +1,6 @@
 #include "MotionPlan.h"
 
-ObjectItem::ObjectItem(PainterWidget *graphView, ObjectData* od, ROBOT_POS r_pos) : graph(graphView), dataset(od),mask(*dataset->polygons()), robot_pos(r_pos){
+ObjectItem::ObjectItem(PainterWidget *graphView, ObjectData* od, ROBOT_POS r_pos, vector< vector <vector<int> > >* _cspace_) : graph(graphView), dataset(od),mask(*dataset->polygons()), robot_pos(r_pos), _cspace(_cspace_){
   setScale(SCALE);
   setTransform(QTransform(1.0,0.0,0.0,0.0,-1.0,0.0,0.0,0.0,1.0));
   setFlag(QGraphicsItem::ItemIsMovable, true);
@@ -76,6 +76,8 @@ void ObjectItem::mouseReleaseEvent(QGraphicsSceneMouseEvent*){
 void ObjectItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event){
   if(event->buttons() == Qt::LeftButton){
     setPos(event->scenePos()-pressPos);
+  //QTransform matrix;
+  //matrix = matrix.rotate(90);
 
     switch (robot_pos) {
       case (NONE) :
@@ -84,6 +86,11 @@ void ObjectItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event){
           dataset->initPos()->setY(SCREEN_HIGHT - pos().y());
           QPointF newPos = *dataset->initPos()/scale();
           dataset->setInitPos(&newPos);
+          if((*_cspace)[0][newPos.y()][newPos.x()]){//][nnewPos.y()][nnewPos.x()]){
+            cout<<"yes"<<endl;
+          }else{
+            cout<<"no "<<endl;
+          }
         }
         break;
       case (R_GOAL) : {

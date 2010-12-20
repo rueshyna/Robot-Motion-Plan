@@ -5,7 +5,7 @@
 class Window : public QObject{
   Q_OBJECT
   public :
-    Window(vector<RobotData>*, vector<ObstacleData>*);
+    Window(vector<RobotData>*, vector<ObstacleData>*, vector< vector< vector<int> > >*);
     QPushButton* setButton();
     QPushButton* resetButton();
     QPushButton* showPathButton();
@@ -31,6 +31,7 @@ class Window : public QObject{
     QPushButton *_smoothButton;
     QPushButton *_prePfButton;
     QPushButton *_nextPfButton;
+    vector< vector <vector<int> > > *_cspace;
 };
 
 class PainterWidget : public QGraphicsView{
@@ -54,7 +55,7 @@ class BitmapItem : public QGraphicsItem{
 };
 class ObjectItem : public QGraphicsItem{
   public:
-    ObjectItem(PainterWidget*,ObjectData*, ROBOT_POS);
+    ObjectItem(PainterWidget*,ObjectData*, ROBOT_POS, vector< vector< vector<int> > >*);
     QPainterPath shape() const;
     QRectF boundingRect() const;
     void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
@@ -69,5 +70,6 @@ class ObjectItem : public QGraphicsItem{
     ObjectData* dataset;
     const QVector<QPolygonF> mask;
     ROBOT_POS robot_pos;
+    vector< vector <vector<int> > > *_cspace;
 };
 #endif

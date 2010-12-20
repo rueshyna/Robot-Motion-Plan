@@ -27,6 +27,7 @@ class VectorFrom : public QPointF{
   private :
     int _from;
     double _angle;
+    INPUT _input;
   public :
     VectorFrom();
     VectorFrom(double, double);
@@ -35,5 +36,7 @@ class VectorFrom : public QPointF{
     void setFrom(int);
     double angle();
     void setAngle(double);
+    INPUT Input();
+    void setInput(INPUT);
 };
 #endif

@@ -1,13 +1,13 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'View.h'
 **
-** Created: Tue Dec 14 17:53:55 2010
+** Created: Mon Dec 20 11:08:27 2010
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.6.2)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "View.h"
+#include "src/headers/View.h"
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'View.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 62

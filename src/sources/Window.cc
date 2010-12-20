@@ -1,6 +1,6 @@
 #include "MotionPlan.h"
 
-Window::Window(vector<RobotData>* _robots, vector<ObstacleData>* _obstacles): robots(_robots), obstacles(_obstacles), viewPf(0){
+Window::Window(vector<RobotData>* _robots, vector<ObstacleData>* _obstacles, vector< vector <vector<int> > >* _cspace_): robots(_robots), obstacles(_obstacles), viewPf(0), _cspace(_cspace_){
   _setButton = new QPushButton("Set");
   _resetButton = new QPushButton("Reset");
   _showPathButton = new QPushButton("Show Path");
@@ -8,7 +8,7 @@ Window::Window(vector<RobotData>* _robots, vector<ObstacleData>* _obstacles): ro
   _smoothButton = new QPushButton("Smooth");
   _prePfButton = new QPushButton("PF Pre");
   _nextPfButton = new QPushButton("PF Next");
-  //productWindow();
+  productWindow();
 }
 
 QPushButton* Window::setButton(){return _setButton;};
@@ -32,13 +32,13 @@ void Window::productWindow(){
   PainterWidget* pfWidget = new PainterWidget(pfScene);
 
   for(vector<ObstacleData>::iterator iter=obstacles->begin(); iter!=obstacles->end() ;++iter){
-    ObjectItem *obs = new ObjectItem(mainWidget, &(*iter),NONE);
+    ObjectItem *obs = new ObjectItem(mainWidget, &(*iter),NONE, _cspace);
     mainScene->addItem(obs);
   }
 
   for(vector<RobotData>::iterator iter=robots->begin(); iter!=robots->end() ;++iter){
-    ObjectItem *r_goal = new ObjectItem(mainWidget, &(*iter), R_GOAL);
-    ObjectItem *r_init = new ObjectItem(mainWidget, &(*iter), R_INIT);
+    ObjectItem *r_goal = new ObjectItem(mainWidget, &(*iter), R_GOAL, _cspace);
+    ObjectItem *r_init = new ObjectItem(mainWidget, &(*iter), R_INIT,_cspace );
     mainScene->addItem(r_goal);
     mainScene->addItem(r_init);
   }
