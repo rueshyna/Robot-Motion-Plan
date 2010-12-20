@@ -86,11 +86,11 @@ void ObjectItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event){
           dataset->initPos()->setY(SCREEN_HIGHT - pos().y());
           QPointF newPos = *dataset->initPos()/scale();
           dataset->setInitPos(&newPos);
-          if((*_cspace)[0][newPos.y()][newPos.x()]){//][nnewPos.y()][nnewPos.x()]){
-            cout<<"yes"<<endl;
-          }else{
-            cout<<"no "<<endl;
-          }
+//          if((*_cspace)[0][newPos.y()][newPos.x()]){//][nnewPos.y()][nnewPos.x()]){
+//            cout<<"yes"<<endl;
+//          }else{
+//            cout<<"no "<<endl;
+//          }
         }
         break;
       case (R_GOAL) : {

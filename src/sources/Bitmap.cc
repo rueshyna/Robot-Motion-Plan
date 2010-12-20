@@ -1,8 +1,4 @@
 #include "MotionPlan.h"
-#include <cstdlib>
-
-using std::max;
-using std::abs;
 
 Bitmap:: Bitmap(){
 }
