@@ -1,13 +1,16 @@
 #include "MotionPlan.h"
 
 BitmapItem::BitmapItem(){}
-BitmapItem::BitmapItem(vector< vector<int> > _bitmap):bitmap(_bitmap){
+BitmapItem::BitmapItem(vector< vector<int> > _bitmap_):_bitmap(_bitmap_){
   setScale(PF_SCALE);
   //setCacheMode(DeviceCoordinateCache);
   setZValue(-1);
 }
-void BitmapItem::setBitmap(vector< vector<int> > _bitmap){
-  bitmap = _bitmap;
+
+vector< vector<int> >* BitmapItem::bitmap(){return &_bitmap;}
+
+void BitmapItem::setBitmap(vector< vector<int> >* _bitmap_){
+  _bitmap = *_bitmap_;
   update();
 }
 void BitmapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*){
@@ -17,7 +20,7 @@ void BitmapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidg
   int countX(0);
   int countY(0);
 
-  for(vector< vector<int> >::iterator i = bitmap.begin(); i != bitmap.end(); ++i){
+  for(vector< vector<int> >::iterator i = _bitmap.begin(); i != _bitmap.end(); ++i){
     for(vector<int>::iterator j = i->begin(); j != i->end(); ++j){
       if(*j == -1){
         painter->setBrush(QColor(0,0,0));

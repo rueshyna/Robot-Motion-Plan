@@ -25,14 +25,21 @@ class RobotData : public ObjectData{
     qreal _goalAngle;
     ControlPoints _controlPoints;
     BitmapItem* _bitmapItem;
+    vector< vector <vector<int> > > _cSpace;
+    vector<PointAndAngle> _path;
   public :
     QPointF* goalPos();
     qreal goalAngle();
     BitmapItem* bitmapItem();
     ControlPoints* controlPoints();
+    vector< vector <vector<int> > >* cSpace();
+    vector<PointAndAngle>* path();
     void setGoalPos(QPointF*);
     void setGoalAngle(qreal);
     void setBitmapItem(BitmapItem*);
+    void setCSpace(vector< vector <vector<int> > >*);
+    void setPath(vector<PointAndAngle>*);
+
 };
 
 class Parser{

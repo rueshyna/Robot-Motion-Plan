@@ -1,6 +1,30 @@
 #ifndef ALGORITHM_H
 #define ALGORITHM_H
 #include "MotionPlan.h"
+
+class TreeNode{
+  private :
+    PointAndAngle* _point;
+    TreeNode* _parent;
+  public :
+    TreeNode(PointAndAngle*);
+    TreeNode(PointAndAngle*, TreeNode*);
+    PointAndAngle* point();
+    TreeNode* parent();
+    void setPoint(PointAndAngle*);
+    void setTreeNode(TreeNode*);
+};
+
+class BFS{
+  private :
+    BFS();
+    static bool empty(vector< stack<PointAndAngle*> >*);
+    static void whoIsneighbor(vector<PointAndAngle>*);
+    static PointAndAngle* first(vector< stack<PointAndAngle*> >*);
+  public :
+    static vector< PointAndAngle > path(QPointF*, double, QPointF*, double, vector< vector<int> >* , vector< vector< vector<int> > >*);
+};
+
 class Bitmap{
   private :
     Bitmap();
@@ -20,9 +44,7 @@ class CSpace{
     static bool minIndex(double, double);
   public :
     static vector< vector < vector<int> > > cObstacle(RobotData*, vector<ObstacleData>*);
-  
 };
-
 class VectorFrom : public QPointF{
   private :
     int _from;

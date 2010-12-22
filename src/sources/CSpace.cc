@@ -81,7 +81,7 @@ void CSpace::findVector(vector<VectorFrom>* v, QPolygonF* p, INPUT object){
 
 vector< vector < vector<int> > > CSpace::cObstacle(RobotData* robot, vector<ObstacleData>* obstacles){
   vector< vector <vector<int> > > cspace;
-//  for(size_t h = 0; h< 360; ++h){
+  for(size_t h = 0; h< 360; ++h){
 
     vector< vector<int> > temp2;
     for(int i = 0; i != 128; ++i){
@@ -90,7 +90,7 @@ vector< vector < vector<int> > > CSpace::cObstacle(RobotData* robot, vector<Obst
     }
 
     QTransform rMatrix;
-    rMatrix = rMatrix.rotate(90);
+    rMatrix = rMatrix.rotate(h);
 
     //each polygons of robot
     for(QVector<QPolygonF>::iterator i = robot->polygons()->begin(); i != robot->polygons()->end(); ++i){
@@ -166,20 +166,16 @@ vector< vector < vector<int> > > CSpace::cObstacle(RobotData* robot, vector<Obst
                   nextIndex = ((m+1)==temp.size())?0:m+1;
 
                   if(abs(temp[m].angle()-temp[preIndex].angle())<abs(temp[m].angle()-temp[nextIndex].angle())){
-                  cout <<l<<" "<<preIndex<<endl;
                     QPointF p = oPolygon.at(temp[m].from())- rPolygon.at(temp[preIndex].from());
                     newPolygon << p;
 
-                  cout <<l <<" "<<nextIndex-1 <<endl;
                      p = oPolygon.at(temp[m].from())- rPolygon.at(temp[nextIndex].from());
                     newPolygon << p;
                     edgeCount++;
                     break;
                   }else{
-                  cout <<l <<" "<<nextIndex-1 <<endl;
                     QPointF p = oPolygon.at(temp[m].from())- rPolygon.at(temp[nextIndex].from());
                     newPolygon << p;
-                  cout <<l<<" "<<preIndex<<endl;
                      p = oPolygon.at(temp[m].from())- rPolygon.at(temp[preIndex].from());
                     newPolygon << p;
                     edgeCount++;
@@ -220,14 +216,13 @@ vector< vector < vector<int> > > CSpace::cObstacle(RobotData* robot, vector<Obst
 */
           }
           Bitmap::setObstacle(&temp2, &newPolygon, 0, j->initPos());
-          cout <<"=============" <<endl;
           obstacleVector.clear();
         }
       }
       robotVector.clear();
     }
     cspace.push_back(temp2);
-  //}
+  }
   return cspace;
 }
 

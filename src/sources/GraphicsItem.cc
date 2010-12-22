@@ -47,12 +47,12 @@ void ObjectItem::initPos(){
   switch (robot_pos) {
     case (NONE) :
     case (R_INIT) :
-      setRotation(dataset->initAngle());
+      setRotation(static_cast<int>(dataset->initAngle()));
       setPos((*dataset->initPos())*scale());
       break;
     case (R_GOAL) :{
         RobotData* ds_robot = static_cast<RobotData*>(dataset);
-        setRotation(ds_robot->goalAngle());
+        setRotation(static_cast<int>(ds_robot->goalAngle()));
         setPos((*ds_robot->goalPos())*scale());
       }
       break;
@@ -98,7 +98,7 @@ void ObjectItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event){
           ds_robot->setGoalPos(&pos());
           ds_robot->goalPos()->setY(SCREEN_HIGHT - pos().y());
           QPointF newPos = *ds_robot->goalPos()/scale();
-          ds_robot->setGoalPos(&newPos);
+          ds_robot->setGoalPos(&QPointF(newPos.x(), newPos.y()));
         }
         break;
       default :
@@ -113,12 +113,12 @@ void ObjectItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event){
     switch (robot_pos) {
       case (NONE) :
       case (R_INIT) :
-        dataset->setInitAngle(newAngle);
+        dataset->setInitAngle(static_cast<int>(newAngle));
         break;
       case (R_GOAL) : {
-          RobotData* ds_robot = static_cast<RobotData*>(dataset);
-          ds_robot->setGoalAngle(newAngle);
-        }
+        RobotData* ds_robot = static_cast<RobotData*>(dataset);
+        ds_robot->setGoalAngle(static_cast<int>(newAngle));
+      }
         break;
       default :
         break;

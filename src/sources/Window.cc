@@ -1,6 +1,6 @@
 #include "MotionPlan.h"
 
-Window::Window(vector<RobotData>* _robots, vector<ObstacleData>* _obstacles, vector< vector <vector<int> > >* _cspace_): robots(_robots), obstacles(_obstacles), viewPf(0), _cspace(_cspace_){
+Window::Window(vector<RobotData>* _robots, vector<ObstacleData>* _obstacles): robots(_robots), obstacles(_obstacles), viewPf(0){
   _setButton = new QPushButton("Set");
   _resetButton = new QPushButton("Reset");
   _showPathButton = new QPushButton("Show Path");
@@ -22,14 +22,13 @@ QPushButton* Window::nextPfButton(){return _nextPfButton;};
 void Window::productWindow(){
   QWidget* window = new QWidget();
   window->setWindowTitle("MotionPlan");
-  window->resize(SCREEN_HIGHT,SCREEN_WIDTH);
   QGridLayout *layout = new QGridLayout;
 
-  mainScene = new QGraphicsScene(0, 0, SCREEN_WIDTH, SCREEN_HIGHT);
-  PainterWidget* mainWidget = new PainterWidget(mainScene);
+  mainScene = new QGraphicsScene(0,0, SCREEN_WIDTH, SCREEN_HIGHT);
+  mainWidget = new PainterWidget(mainScene);
 
   pfScene = new QGraphicsScene(0, -PF_HIGHT, PF_WIDTH, PF_HIGHT);
-  PainterWidget* pfWidget = new PainterWidget(pfScene);
+  pfWidget = new PainterWidget(pfScene);
 
   for(vector<ObstacleData>::iterator iter=obstacles->begin(); iter!=obstacles->end() ;++iter){
     ObjectItem *obs = new ObjectItem(mainWidget, &(*iter),NONE, _cspace);
@@ -83,7 +82,15 @@ void Window::productWindow(){
   QObject::connect(setButton(),SIGNAL(clicked()), this, SLOT(showPf()));
   QObject::connect(prePfButton(),SIGNAL(clicked()), this, SLOT(prePf()));
   QObject::connect(nextPfButton(),SIGNAL(clicked()), this, SLOT(nextPf()));
-  //showPF();
+  QObject::connect(showPathButton(),SIGNAL(clicked()), this, SLOT(showPath()));
+}
+void Window::showPath(){
+  for(vector<RobotData>::iterator i=robots->begin(); i!=robots->end(); ++i){
+    for(vector<PointAndAngle>::iterator j=i->path()->begin(); j!=i->path()->end(); ++j){
+      PathItem *pathItem = new PathItem(i->polygons(), &*j);
+      mainScene->addItem(pathItem);
+    }
+  }
 }
 void Window::prePf(){
   if(viewPf > 0){
@@ -101,8 +108,11 @@ void Window::showPf(){
   vector< vector<int> > bmap =  Bitmap::setObstacles(obstacles);
 
   for(vector<RobotData>::iterator i=robots->begin(); i!=robots->end(); ++i){
-    i->bitmapItem()->setBitmap(Bitmap::NF1(i->goalPos(), &bmap));
+    i->bitmapItem()->setBitmap(&Bitmap::NF1(i->goalPos(), &bmap));
+    i->setCSpace(&CSpace::cObstacle(&*i,obstacles));
+    i->setPath(&(BFS::path(i->initPos(), i->initAngle(), i->goalPos(), i->goalAngle(), i->bitmapItem()->bitmap(), i->cSpace())));
   }
+  
 /*  Bitmap *map = new Bitmap();
   map->setObstacles(obstacles);
 

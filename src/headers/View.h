@@ -2,10 +2,18 @@
 #define VIEW_H
 #include "MotionPlan.h"
 
+class PainterWidget : public QGraphicsView{
+  Q_OBJECT
+  public :
+    PainterWidget(QGraphicsScene*);
+  protected :
+    void keyPressEvent(QKeyEvent*);
+    void scaleView(qreal);
+};
 class Window : public QObject{
   Q_OBJECT
   public :
-    Window(vector<RobotData>*, vector<ObstacleData>*, vector< vector< vector<int> > >*);
+    Window(vector<RobotData>*, vector<ObstacleData>*);
     QPushButton* setButton();
     QPushButton* resetButton();
     QPushButton* showPathButton();
@@ -17,10 +25,13 @@ class Window : public QObject{
     void showPf();
     void prePf();
     void nextPf();
+    void showPath();
   private :
     int viewPf;
     vector<RobotData>* robots;
     vector<ObstacleData>* obstacles;
+    PainterWidget* mainWidget;
+    PainterWidget* pfWidget;
     QGraphicsScene* mainScene;
     QGraphicsScene* pfScene;
     void productWindow();
@@ -34,24 +45,28 @@ class Window : public QObject{
     vector< vector <vector<int> > > *_cspace;
 };
 
-class PainterWidget : public QGraphicsView{
-  Q_OBJECT
-  public :
-    PainterWidget(QGraphicsScene*);
-  protected :
-    void keyPressEvent(QKeyEvent*);
-    void scaleView(qreal);
-};
 
 class BitmapItem : public QGraphicsItem{
   public :
     BitmapItem();
     BitmapItem(vector< vector<int> >);
-    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
     QRectF boundingRect() const;
-    void setBitmap(vector< vector<int> > _bitmap);
+    vector< vector<int> >* bitmap();
+    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
+    void setBitmap(vector< vector<int> >*);
   private :
-    vector< vector<int> > bitmap;
+    vector< vector<int> > _bitmap;
+};
+class PathItem : public QGraphicsItem{
+  public :
+    PathItem(QVector<QPolygonF>*, PointAndAngle*);
+    QPainterPath shape() const;
+    QRectF boundingRect() const;
+    void initPos();
+    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
+  private :
+    QVector<QPolygonF>* _poly;
+    PointAndAngle* _point;
 };
 class ObjectItem : public QGraphicsItem{
   public:
@@ -72,4 +87,5 @@ class ObjectItem : public QGraphicsItem{
     ROBOT_POS robot_pos;
     vector< vector <vector<int> > > *_cspace;
 };
+
 #endif

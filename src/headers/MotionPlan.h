@@ -9,6 +9,7 @@
 #include <vector>
 #include <cstring>
 #include <string>
+#include <stack>
 #define SCREEN_WIDTH 128*SCALE
 #define SCREEN_HIGHT 128*SCALE
 #define SCALE 3
@@ -37,9 +38,13 @@ class BitmapItem;
 class PainterWidge;
 class VectorFrom;
 class CSpace;
+class TreeNode;
+class BFS;
+class PathItem;
+typedef QVector3D PointAndAngle;
 
-#include "Data.h"
 #include "Algorithm.h"
+#include "Data.h"
 #include "View.h"
 
 #endif
