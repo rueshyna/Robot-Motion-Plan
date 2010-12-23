@@ -43,6 +43,8 @@ class CSpace{
     static void sortByAngle(vector<VectorFrom>*);
     static bool minIndex(double, double);
     static int delta(double, double);
+    static bool checkPreIndex(double, double, vector<VectorFrom>* );
+    static bool checkNextIndex(double, double, vector<VectorFrom>* );
   public :
     static vector< vector < vector<int> > > cObstacle(RobotData*, vector<ObstacleData>*);
 };
