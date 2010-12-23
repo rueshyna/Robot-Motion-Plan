@@ -31,13 +31,13 @@ void Window::productWindow(){
   pfWidget = new PainterWidget(pfScene);
 
   for(vector<ObstacleData>::iterator iter=obstacles->begin(); iter!=obstacles->end() ;++iter){
-    ObjectItem *obs = new ObjectItem(mainWidget, &(*iter),NONE, _cspace);
+    ObjectItem *obs = new ObjectItem(&(*iter),NONE);
     mainScene->addItem(obs);
   }
 
   for(vector<RobotData>::iterator iter=robots->begin(); iter!=robots->end() ;++iter){
-    ObjectItem *r_goal = new ObjectItem(mainWidget, &(*iter), R_GOAL, _cspace);
-    ObjectItem *r_init = new ObjectItem(mainWidget, &(*iter), R_INIT,_cspace );
+    ObjectItem *r_goal = new ObjectItem(&(*iter), R_GOAL);
+    ObjectItem *r_init = new ObjectItem(&(*iter), R_INIT);
     mainScene->addItem(r_goal);
     mainScene->addItem(r_init);
   }
@@ -110,9 +110,9 @@ void Window::showPf(){
   for(vector<RobotData>::iterator i=robots->begin(); i!=robots->end(); ++i){
     i->bitmapItem()->setBitmap(&Bitmap::NF1(i->goalPos(), &bmap));
     i->setCSpace(&CSpace::cObstacle(&*i,obstacles));
-    i->setPath(&(BFS::path(i->initPos(), i->initAngle(), i->goalPos(), i->goalAngle(), i->bitmapItem()->bitmap(), i->cSpace())));
+  //  i->setPath(&(BFS::path(i->initPos(), i->initAngle(), i->goalPos(), i->goalAngle(), i->bitmapItem()->bitmap(), i->cSpace())));
   }
-  
+
 /*  Bitmap *map = new Bitmap();
   map->setObstacles(obstacles);
 

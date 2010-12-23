@@ -70,7 +70,7 @@ class PathItem : public QGraphicsItem{
 };
 class ObjectItem : public QGraphicsItem{
   public:
-    ObjectItem(PainterWidget*,ObjectData*, ROBOT_POS, vector< vector< vector<int> > >*);
+    ObjectItem(ObjectData*, ROBOT_POS);
     QPainterPath shape() const;
     QRectF boundingRect() const;
     void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
@@ -81,11 +81,9 @@ class ObjectItem : public QGraphicsItem{
     void mouseMoveEvent(QGraphicsSceneMouseEvent*);
   private:
     QPointF pressPos;
-    PainterWidget *graph;
     ObjectData* dataset;
     const QVector<QPolygonF> mask;
     ROBOT_POS robot_pos;
-    vector< vector <vector<int> > > *_cspace;
 };
 
 #endif

@@ -1,6 +1,6 @@
 #include "MotionPlan.h"
 
-ObjectItem::ObjectItem(PainterWidget *graphView, ObjectData* od, ROBOT_POS r_pos, vector< vector <vector<int> > >* _cspace_) : graph(graphView), dataset(od),mask(*dataset->polygons()), robot_pos(r_pos), _cspace(_cspace_){
+ObjectItem::ObjectItem(ObjectData* od, ROBOT_POS r_pos) :dataset(od),mask(*dataset->polygons()), robot_pos(r_pos){
   setScale(SCALE);
   setTransform(QTransform(1.0,0.0,0.0,0.0,-1.0,0.0,0.0,0.0,1.0));
   setFlag(QGraphicsItem::ItemIsMovable, true);
@@ -85,12 +85,7 @@ void ObjectItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event){
           dataset->setInitPos(&pos());
           dataset->initPos()->setY(SCREEN_HIGHT - pos().y());
           QPointF newPos = *dataset->initPos()/scale();
-          dataset->setInitPos(&newPos);
-//          if((*_cspace)[0][newPos.y()][newPos.x()]){//][nnewPos.y()][nnewPos.x()]){
-//            cout<<"yes"<<endl;
-//          }else{
-//            cout<<"no "<<endl;
-//          }
+          dataset->setInitPos(&QPointF(static_cast<int>(newPos.x()), static_cast<int>(newPos.y())));
         }
         break;
       case (R_GOAL) : {
@@ -98,7 +93,13 @@ void ObjectItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event){
           ds_robot->setGoalPos(&pos());
           ds_robot->goalPos()->setY(SCREEN_HIGHT - pos().y());
           QPointF newPos = *ds_robot->goalPos()/scale();
-          ds_robot->setGoalPos(&QPointF(newPos.x(), newPos.y()));
+          ds_robot->setGoalPos(&QPointF(static_cast<int>(newPos.x()), static_cast<int>(newPos.y())));
+            cout<<"x "<<(int)dataset->initAngle() <<" "<<(int)newPos.y()<<" "<<(int)newPos.x()<<" " <<(*ds_robot->cSpace())[0][(int)newPos.y()][(int)newPos.x()] <<endl;
+          if((*ds_robot->cSpace())[0][(int)newPos.y()][(int)newPos.x()]){
+            cout<<"yes"<<endl;
+          }else{
+            cout<<"no "<<endl;
+          }
         }
         break;
       default :

@@ -42,6 +42,7 @@ class CSpace{
     static void findVector(vector<VectorFrom>*, QPolygonF*, INPUT);
     static void sortByAngle(vector<VectorFrom>*);
     static bool minIndex(double, double);
+    static int delta(double, double);
   public :
     static vector< vector < vector<int> > > cObstacle(RobotData*, vector<ObstacleData>*);
 };
