@@ -110,7 +110,9 @@ void Window::showPf(){
   for(vector<RobotData>::iterator i=robots->begin(); i!=robots->end(); ++i){
     i->bitmapItem()->setBitmap(&Bitmap::NF1(i->goalPos(), &bmap));
     i->setCSpace(&CSpace::cObstacle(&*i,obstacles));
-  //  i->setPath(&(BFS::path(i->initPos(), i->initAngle(), i->goalPos(), i->goalAngle(), i->bitmapItem()->bitmap(), i->cSpace())));
+cout <<"here" <<endl;
+    i->setPath(&(BFS::path(i->initPos(), i->initAngle(), i->goalPos(), i->goalAngle(), i->bitmapItem()->bitmap(), i->cSpace())));
+cout <<"here" <<endl;
   }
 
 /*  Bitmap *map = new Bitmap();

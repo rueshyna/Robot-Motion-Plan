@@ -90,8 +90,8 @@ bool CSpace::checkPreIndex(double obsAngle, double preAngle, vector<VectorFrom>*
   int count(0);
   bool over360(abs(obsAngle-preAngle)>180);
   for(vector<VectorFrom>::iterator i = _obsVec->begin(); i!=_obsVec->end(); ++i){
-//    cout << "test pre " <<i->angle() <<" "<<preAngle <<" "<<obsAngle<<" "<<count <<endl;
-//    cout <<" cc " <<(i->angle()>=preAngle) <<" "<< (i->angle()<obsAngle)<<endl;
+   // cout << "test pre " <<i->angle() <<" "<<preAngle <<" "<<obsAngle<<" "<<count <<endl;
+   // cout <<" cc " <<(i->angle()<=preAngle) <<" "<< (i->angle()>obsAngle)<<endl;
     if(!over360 && i->angle()>=preAngle && i->angle()<obsAngle){
       ++count;
     }
@@ -102,7 +102,7 @@ bool CSpace::checkPreIndex(double obsAngle, double preAngle, vector<VectorFrom>*
   if(over360){count = _obsVec->size()-count-1;}
 
 //cout <<"c "<<count<<endl;
-  return (count < 2);
+  return (count < 1);
 }
 bool CSpace::checkNextIndex(double obsAngle, double nextAngle, vector<VectorFrom>* _obsVec){
   int count(0);
@@ -123,7 +123,7 @@ bool CSpace::checkNextIndex(double obsAngle, double nextAngle, vector<VectorFrom
 }
 vector< vector < vector<int> > > CSpace::cObstacle(RobotData* robot, vector<ObstacleData>* obstacles){
   vector< vector <vector<int> > > cspace;
-//  for(size_t h = 0; h< 360; ++h){
+  for(size_t h = 0; h< 360; ++h){
 
     vector< vector<int> > temp2;
     for(int i = 0; i != 128; ++i){
@@ -132,7 +132,7 @@ vector< vector < vector<int> > > CSpace::cObstacle(RobotData* robot, vector<Obst
     }
 
     QTransform rMatrix;
-    rMatrix = rMatrix.rotate(robot->initAngle());
+    rMatrix = rMatrix.rotate(h);
 
     //each polygons of robot
     for(QVector<QPolygonF>::iterator i = robot->polygons()->begin(); i != robot->polygons()->end(); ++i){
@@ -140,17 +140,17 @@ vector< vector < vector<int> > > CSpace::cObstacle(RobotData* robot, vector<Obst
       QPolygonF rPolygon;
 
       for(QPolygonF::iterator j=i->begin(); j!=i->end(); ++j){
-        cout << "j "<<j->x()<<" "<<j->y()<<endl;
+//        cout << "j "<<j->x()<<" "<<j->y()<<endl;
         rPolygon << rMatrix.map(*j);
         QPointF rr = rMatrix.map(*j);
-        cout << "rPolygon "<<rr.x()<<" "<<rr.y()<<endl;
+  //      cout << "rPolygon "<<rr.x()<<" "<<rr.y()<<endl;
       }
 
       findVector(&robotVector, &rPolygon, ROBOT);
       sortByAngle(&robotVector);
-      for(vector<VectorFrom>::iterator j = robotVector.begin(); j != robotVector.end(); ++j){
-        cout <<"sort "<<j->x()<<" "<<j->y()<<endl;
-      }
+   //   for(vector<VectorFrom>::iterator j = robotVector.begin(); j != robotVector.end(); ++j){
+   //     cout <<"sort "<<j->x()<<" "<<j->y()<<endl;
+   //   }
 
       //each obstacle
       for(vector<ObstacleData>::iterator j = obstacles->begin(); j != obstacles->end(); ++j){
@@ -197,20 +197,20 @@ vector< vector < vector<int> > > CSpace::cObstacle(RobotData* robot, vector<Obst
         //  }
 //          QPointF p = oPolygon.at(obstacleVector.at(obstacleVector.size()-1).from())- rPolygon.at(robotVector.at(start).from());
   //                newPolygon << p;
-
-          int count(1);
+          bool add(true);
+          int startIndex(-1);
           int edgeCount(0);
           int totalEdge(obstacleVector.size()+robotVector.size());
 //          for(vector<VectorFrom>::iterator l = obstacleVector.begin(); l!=obstacleVector.end(); ++l){
             for(int l = 0; l!=obstacleVector.size(); ++l){
             if(edgeCount == obstacleVector.size()+robotVector.size()){break;}
-            cout <<"===========" <<endl;
+  //          cout <<"===========" <<endl;
               vector<VectorFrom> temp = robotVector;
               temp.push_back(obstacleVector.at(l));
               sortByAngle(&temp);
-      for(vector<VectorFrom>::iterator r = temp.begin(); r != temp.end(); ++r){
-        cout <<"temp "<<r->x()<<" "<<r->y()<<" "<<r->angle()<<endl;
-      }
+    //  for(vector<VectorFrom>::iterator r = temp.begin(); r != temp.end(); ++r){
+     //   cout <<"temp "<<r->x()<<" "<<r->y()<<" "<<r->angle()<<endl;
+     // }
               int preIndex;
               int nextIndex;
               for(int m = 0; m <temp.size(); ++m){
@@ -228,13 +228,19 @@ vector< vector < vector<int> > > CSpace::cObstacle(RobotData* robot, vector<Obst
                   QPointF p;
                   double preCount = delta(temp[m].angle(),temp[preIndex].angle());
                   double nextCount = delta(temp[m].angle(),temp[nextIndex].angle());
-
+//cout <<"check1"<<endl;
+//                  if((temp[preIndex].angle()-temp[nextIndex].angle()>=180)||(nextIndex == startIndex)){
+  //                  int changeIndex(preIndex);
+    //                preIndex = nextIndex;
+      //              nextIndex =  changeIndex;
+        //          }
                   if((temp[preIndex].angle()<temp[nextIndex].angle() || (temp[preIndex].angle()-temp[nextIndex].angle())>=180) && (nextCount > preCount || totalEdge-edgeCount >= 2)){
-                    if(checkPreIndex(temp[m].angle(),temp[preIndex].angle(), &obstacleVector)){
+                    if(checkPreIndex(temp[m].angle(),temp[preIndex].angle(), &obstacleVector)){//&&(rPolygon.at(temp[preIndex].from()).y()!=rPolygon.at(temp[nextIndex].from()).y())){
                       p = oPolygon.at(temp[m].from())- rPolygon.at(temp[preIndex].from());
                       newPolygon << QPointF(p.x(),p.y());
                       ++edgeCount;
-                      cout<<"match1 "<< m <<" " <<preIndex <<" "<<  edgeCount<<" "<<totalEdge <<endl;
+                      startIndex = preIndex;
+//                      cout<<"match1 "<< m <<" " <<preIndex <<" "<<  edgeCount<<" "<<totalEdge <<endl;
                       if(edgeCount == totalEdge){
                         break;
                       }
@@ -243,7 +249,8 @@ vector< vector < vector<int> > > CSpace::cObstacle(RobotData* robot, vector<Obst
                       p = oPolygon.at(temp[m].from())- rPolygon.at(temp[nextIndex].from());
                       newPolygon << QPointF(p.x(),p.y());
                       ++edgeCount;
-                      cout<<"match2 "<< m <<" " <<nextIndex <<" "<<edgeCount<<" "<<(obstacleVector.size()+robotVector.size()-1) <<endl;
+                      startIndex = nextIndex;
+  //                    cout<<"match2 "<< m <<" " <<nextIndex <<" "<<edgeCount<<" "<<(obstacleVector.size()+robotVector.size()-1) <<endl;
                       if(edgeCount == totalEdge){
                         break;
                       }
@@ -253,7 +260,7 @@ vector< vector < vector<int> > > CSpace::cObstacle(RobotData* robot, vector<Obst
                       p = oPolygon.at(temp[m].from())- rPolygon.at(temp[nextIndex].from());
                       newPolygon << QPointF(p.x(),p.y());
                       ++edgeCount;
-                      cout<<"match3 "<< m <<" " <<nextIndex <<" "<<edgeCount<<" "<<(obstacleVector.size()+robotVector.size()-1) <<endl;
+    //                  cout<<"match3 "<< m <<" " <<nextIndex <<" "<<edgeCount<<" "<<(obstacleVector.size()+robotVector.size()-1) <<endl;
                       if(edgeCount == totalEdge){
                         break;
                       }
@@ -262,7 +269,7 @@ vector< vector < vector<int> > > CSpace::cObstacle(RobotData* robot, vector<Obst
                       p = oPolygon.at(temp[m].from())- rPolygon.at(temp[preIndex].from());
                       newPolygon << QPointF(p.x(),p.y());
                       ++edgeCount;
-                      cout<<"match4 "<< m <<" " <<preIndex<<" "<<edgeCount<<" "<<(obstacleVector.size()+robotVector.size())  <<endl;
+      //                cout<<"match4 "<< m <<" " <<preIndex<<" "<<edgeCount<<" "<<(obstacleVector.size()+robotVector.size())  <<endl;
                       if(edgeCount == totalEdge){
                         break;
                       }
@@ -302,9 +309,9 @@ vector< vector < vector<int> > > CSpace::cObstacle(RobotData* robot, vector<Obst
             }
 */
           }
-                    for(QPolygonF::iterator b = newPolygon.begin(); b!=newPolygon.end(); ++b){
-                      cout <<"polygon " <<b->x() <<" "<<b->y()<<endl;
-                    }
+     //               for(QPolygonF::iterator b = newPolygon.begin(); b!=newPolygon.end(); ++b){
+      //                cout <<"polygon " <<b->x() <<" "<<b->y()<<endl;
+      //              }
           Bitmap::setObstacle(&temp2, &newPolygon, 0, j->initPos());
           obstacleVector.clear();
         }
@@ -312,7 +319,7 @@ vector< vector < vector<int> > > CSpace::cObstacle(RobotData* robot, vector<Obst
       robotVector.clear();
     }
     cspace.push_back(temp2);
-//  }
+  }
   return cspace;
 }
 

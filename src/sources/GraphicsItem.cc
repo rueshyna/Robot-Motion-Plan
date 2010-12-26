@@ -94,12 +94,12 @@ void ObjectItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event){
           ds_robot->goalPos()->setY(SCREEN_HIGHT - pos().y());
           QPointF newPos = *ds_robot->goalPos()/scale();
           ds_robot->setGoalPos(&QPointF(static_cast<int>(newPos.x()), static_cast<int>(newPos.y())));
-            cout<<"x "<<(int)dataset->initAngle() <<" "<<(int)newPos.y()<<" "<<(int)newPos.x()<<" " <<(*ds_robot->cSpace())[0][(int)newPos.y()][(int)newPos.x()] <<endl;
-          if((*ds_robot->cSpace())[0][(int)newPos.y()][(int)newPos.x()]){
-            cout<<"yes"<<endl;
-          }else{
-            cout<<"no "<<endl;
-          }
+      //      cout<<"x "<<(int)dataset->initAngle() <<" "<<(int)newPos.y()<<" "<<(int)newPos.x()<<" " <<(*ds_robot->cSpace())[0][(int)newPos.y()][(int)newPos.x()] <<endl;
+//          if((*ds_robot->cSpace())[0][(int)newPos.y()][(int)newPos.x()]){
+ //           cout<<"yes"<<endl;
+  //        }else{
+   //         cout<<"no "<<endl;
+     //     }
         }
         break;
       default :
