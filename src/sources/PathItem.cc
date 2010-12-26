@@ -8,7 +8,7 @@ PathItem::PathItem(QVector<QPolygonF>* _poly_, PointAndAngle* _point_): _poly(_p
   initPos();
 }
 QRectF PathItem::boundingRect() const{
-  return QRect(-45,-45,100,100);
+   return QRectF(-SCREEN_HIGHT, -SCREEN_WIDTH, 2*SCREEN_HIGHT, 2*SCREEN_WIDTH);
 }
 QPainterPath PathItem::shape() const{
   QPainterPath path;

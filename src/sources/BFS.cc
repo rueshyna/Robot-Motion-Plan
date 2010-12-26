@@ -38,14 +38,12 @@ vector< PointAndAngle > BFS::path(QPointF* init, double initAngle,  QPointF* goa
         break;
       }
     }
-    //cout << "x " << x->x() <<" " <<x->y()<<" "<<x->z()<<endl;
-    //cout <<(*bitmap)[x->y()][x->x()]<<endl;
     for(vector<PointAndAngle>::iterator i = neighbor.begin(); i!=neighbor.end(); ++i){
       PointAndAngle *xPlus = new PointAndAngle(*x+*i);
 
       xPlus->setZ((xPlus->z() == 360)?0:xPlus->z());
       xPlus->setZ((xPlus->z() == -1)?359:xPlus->z());
-      if((xPlus->x()<128 && xPlus->x()>=0) && (xPlus->y()<128 && xPlus->y()>=0) &&((*cspace)[xPlus->z()][xPlus->y()][xPlus->x()] != -1) && !(map[xPlus->z()][xPlus->y()][xPlus->x()])&&(*bitmap)[xPlus->y()][xPlus->x()]){
+      if((xPlus->x()<128 && xPlus->x()>=0) && (xPlus->y()<128 && xPlus->y()>=0) &&((*cspace)[xPlus->z()][xPlus->y()][xPlus->x()] != -1) && !(map[xPlus->z()][xPlus->y()][xPlus->x()])&&((*bitmap)[xPlus->y()][xPlus->x()]!=-1)){
         sibling.push_back(new TreeNode(xPlus, tree));
         open[(*bitmap)[xPlus->y()][xPlus->x()]].push(xPlus);
         map[xPlus->z()][xPlus->y()][xPlus->x()]=1;
@@ -66,9 +64,6 @@ vector< PointAndAngle > BFS::path(QPointF* init, double initAngle,  QPointF* goa
   }
   findpath.push_back(*x);
 
-//  for(vector<PointAndAngle>::iterator i = findpath.begin(); i!=findpath.end(); ++i){
-//    cout << i->x() <<" " <<i->y() <<" "<<i->z() <<endl;
-//    }
   if(!success){
     findpath.clear();
   }
@@ -79,7 +74,6 @@ PointAndAngle* BFS::first(vector< stack<PointAndAngle*> >* _open){
   PointAndAngle *x;
   for(vector< stack<PointAndAngle*> >::iterator i = _open->begin(); i != _open->end(); ++i){
     if(!(i->empty())){
-//  cout << "first1"<< (i->top())->x()<<endl;
       x = i->top();
       i->pop();
       break;

@@ -63,11 +63,6 @@ void Window::productWindow(){
   vector< vector<int> > bmap =  Bitmap::setObstacles(obstacles);
 
   for(vector<RobotData>::iterator i=robots->begin(); i!=robots->end(); ++i){
-   // QTransform matrix;
-   // matrix = matrix.rotate(i->goalAngle());
-    //for(ControlPoints::iterator j=i->controlPoints()->begin(); j!=i->controlPoints()->end(); ++j){
-      //QPointF p = matrix.map(*j)+ *i->goalPos();
-
       i->setBitmapItem(new BitmapItem(Bitmap::NF1(i->goalPos(), &bmap)));
       if(i==robots->begin()){
         i->bitmapItem()->show();
@@ -75,8 +70,6 @@ void Window::productWindow(){
         i->bitmapItem()->hide();
       }
       pfScene->addItem(i->bitmapItem());
-
-    //}
   }
 
   QObject::connect(setButton(),SIGNAL(clicked()), this, SLOT(showPf()));
@@ -110,37 +103,6 @@ void Window::showPf(){
   for(vector<RobotData>::iterator i=robots->begin(); i!=robots->end(); ++i){
     i->bitmapItem()->setBitmap(&Bitmap::NF1(i->goalPos(), &bmap));
     i->setCSpace(&CSpace::cObstacle(&*i,obstacles));
-cout <<"here" <<endl;
     i->setPath(&(BFS::path(i->initPos(), i->initAngle(), i->goalPos(), i->goalAngle(), i->bitmapItem()->bitmap(), i->cSpace())));
-cout <<"here" <<endl;
   }
-
-/*  Bitmap *map = new Bitmap();
-  map->setObstacles(obstacles);
-
-  for(vector<RobotData>::iterator i=robots->begin(); i!=robots->end(); ++i){
-    QTransform matrix;
-    matrix = matrix.rotate(i->goalAngle());
-
-    for(ControlPoints::iterator j=i->controlPoints()->begin(); j!=i->controlPoints()->end(); ++j){
-      QWidget* window = new QWidget();
-      QHBoxLayout *layout = new QHBoxLayout;
-      vector< vector<int> > bmap;
-      QPointF p = matrix.map(*j)+ *i->goalPos();
-      bmap = map->NF1(&p);
-
-      QGraphicsScene* scene = new QGraphicsScene(0, -PF_HIGHT, PF_WIDTH, PF_HIGHT);
-      PFwindow* _pf = new PFwindow(scene);
-      BitmapItem* mapItem = new BitmapItem(_pf, bmap);
-      scene->addItem(mapItem);
-
-      _pf->setRenderHint(QPainter::Antialiasing);
-      _pf->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
-      layout->addWidget(_pf);
-      window->setLayout(layout);
-      window->setWindowTitle("Potential Field");
-      window->show();
-    }
-  }*/
-  //layout->setSizeConstraint(QLayout::SetFixedSize);
 }

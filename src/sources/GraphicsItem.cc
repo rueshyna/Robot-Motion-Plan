@@ -11,7 +11,7 @@ ObjectItem::ObjectItem(ObjectData* od, ROBOT_POS r_pos) :dataset(od),mask(*datas
 }
 
 QRectF ObjectItem::boundingRect() const{
-   return QRectF(-45, -45, 90, 90);
+   return QRectF(-SCREEN_HIGHT, -SCREEN_WIDTH, 2*SCREEN_HIGHT, 2*SCREEN_WIDTH);
 }
 
 QPainterPath ObjectItem::shape() const{
