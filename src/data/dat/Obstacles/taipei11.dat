@@ -1,0 +1,257 @@
+
+#DESCRIPTION_OF_POLYGONS
+#Number of Obstacle
+12
+#Obstacle #0
+#Number of Polygons
+1
+#Polygon #0
+#Number of Vertices
+4
+#------------
+30.501482 129.23007
+-30.501482 129.23007
+-30.501482 -129.23006
+30.501482 -129.23006
+#Initial Configuration
+7.2240276 378.86053 0
+#Obstacle #1
+#Number of Polygons
+1
+#Polygon #0
+#Number of Vertices
+4
+#------------
+54.581627 87.49106
+-54.581627 87.49106
+-54.581627 -87.49103
+54.581627 -87.49103
+#Initial Configuration
+123.611275 369.22845 0
+#Obstacle #2
+#Number of Polygons
+1
+#Polygon #0
+#Number of Vertices
+4
+#------------
+54.581635 87.49103
+-54.58162 87.49103
+-54.58162 -87.49106
+54.581635 -87.49106
+#Initial Configuration
+276.11868 368.42584 0
+#Obstacle #3
+#Number of Polygons
+2
+#Polygon #0
+#Number of Vertices
+4
+#------------
+80.66843 115.98587
+10.836029 115.98587
+10.836029 -115.98584
+80.66843 -115.98584
+#Polygon #1
+#Number of Vertices
+4
+#------------
+28.494812 83.076385
+-80.66843 83.076385
+-80.66843 -91.9057
+28.494812 -91.9057
+#Initial Configuration
+436.2515 372.03784 0
+#Obstacle #4
+#Number of Polygons
+5
+#Polygon #0
+#Number of Vertices
+4
+#------------
+120.40053 -8.026733
+11.237381 -8.026733
+11.237381 -42.541504
+120.40053 -42.541504
+#Polygon #1
+#Number of Vertices
+4
+#------------
+254.44652 -8.829407
+145.28337 -8.829407
+145.28337 -43.344208
+254.44652 -43.344208
+#Polygon #2
+#Number of Vertices
+4
+#------------
+-257.6573 43.344177
+-257.6573 -20.066833
+257.6573 -20.066833
+257.6573 43.344177
+#Polygon #3
+#Number of Vertices
+4
+#------------
+-134.84872 -7.22406
+-244.01186 -7.22406
+-244.01186 -41.73886
+-134.84872 -41.73886
+#Polygon #4
+#Number of Vertices
+4
+#------------
+-8.026794 -8.026794
+-117.189926 -8.026794
+-117.189926 -42.541534
+-8.026794 -42.541534
+#Initial Configuration
+250.43324 523.34125 0
+#Obstacle #5
+#Number of Polygons
+4
+#Polygon #0
+#Number of Vertices
+4
+#------------
+130.03265 83.076416
+-243.20909 83.076385
+-243.20909 44.54802
+119.59796 44.548203
+#Polygon #1
+#Number of Vertices
+4
+#------------
+266.4867 83.076416
+149.29675 83.076416
+109.96594 -83.07639
+268.09204 -83.07639
+#Polygon #2
+#Number of Vertices
+4
+#------------
+80.26715 55.785553
+-268.092 55.785553
+-268.092 -80.66822
+80.26715 -80.66822
+#Polygon #3
+#Number of Vertices
+4
+#------------
+122.00598 54.982956
+73.04309 54.982956
+48.96295 -79.865715
+91.50452 -79.865715
+#Initial Configuration
+239.99847 173.7782 0
+#Obstacle #6
+#Number of Polygons
+1
+#Polygon #0
+#Number of Vertices
+4
+#------------
+14.448076 30.100037
+-14.448076 30.100037
+-14.448076 -30.100033
+14.448076 -30.100033
+#Initial Configuration
+9.632071 23.67884 0
+#Obstacle #7
+#Number of Polygons
+1
+#Polygon #0
+#Number of Vertices
+4
+#------------
+74.6485 18.059982
+-74.648476 18.059982
+-74.648476 -18.059982
+74.6485 -18.059982
+#Initial Configuration
+128.4273 85.484535 0
+#Obstacle #8
+#Number of Polygons
+1
+#Polygon #0
+#Number of Vertices
+4
+#------------
+39.330933 17.257309
+-39.330948 17.257309
+-39.330948 -17.257317
+39.330933 -17.257317
+#Initial Configuration
+267.28943 86.287186 0
+#Obstacle #9
+#Number of Polygons
+1
+#Polygon #0
+#Number of Vertices
+4
+#------------
+32.909576 11.638617
+-32.90956 11.638617
+-32.90956 -11.638617
+32.909576 -11.638617
+#Initial Configuration
+269.6974 5.217453 0
+#Obstacle #10
+#Number of Polygons
+2
+#Polygon #0
+#Number of Vertices
+6
+#------------
+9.230698 15.250746
+-25.284126 15.250746
+-75.049706 5.618696
+-75.0497 -23.277447
+-6.020035 -23.277447
+9.230728 -23.277447
+#Polygon #1
+#Number of Vertices
+4
+#------------
+8.428055 15.250742
+8.428055 -3.210682
+75.04971 -3.210682
+75.04971 23.277449
+#Initial Configuration
+133.64465 21.672106 0
+#Obstacle #11
+#Number of Polygons
+2
+#Polygon #0
+#Number of Vertices
+4
+#------------
+89.497925 35.718735
+-50.167053 35.718735
+-50.167053 -0.40123558
+89.497925 -0.40123558
+#Polygon #1
+#Number of Vertices
+4
+#------------
+85.48456 16.454626
+-89.497925 16.454626
+-89.497925 -35.71873
+85.48456 -35.71873
+#Initial Configuration
+421.0008 22.073557 0
+
+#BOUND_OF_WORKING_SPACE 
+0  0 500.0 500.0
+#Height
+0
+#Number of Places
+0
+#Number of Walls
+0
+#Number of Blocks
+0
+#Number of Stairs
+-1 -1 null
+60 20 null
+#X Y Width Height Description

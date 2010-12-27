@@ -2,8 +2,17 @@
 #define ALGORITHM_H
 #include "MotionPlan.h"
 
+class Smooth{
+  private :
+    Smooth();
+    static bool checkPath(vector< vector < vector<int> > >*, vector< PointAndAngle >*, vector< PointAndAngle >::iterator,int);
+  public :
+    static void smooth(vector< vector < vector<int> > >*, vector< PointAndAngle >*, vector< PointAndAngle >::iterator, int);
+};
+
 class TreeNode{
   private :
+    TreeNode();
     PointAndAngle* _point;
     TreeNode* _parent;
   public :

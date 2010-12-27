@@ -113,7 +113,8 @@ bool CSpace::checkNextIndex(double obsAngle, double nextAngle, vector<VectorFrom
     }
   }
   if(over360){count = _obsVec->size()-count-1;}
-    return (count<2);
+    //return (count<2);
+    return true;
 }
 vector< vector < vector<int> > > CSpace::cObstacle(RobotData* robot, vector<ObstacleData>* obstacles){
   vector< vector <vector<int> > > cspace;

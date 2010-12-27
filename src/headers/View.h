@@ -22,12 +22,14 @@ class Window : public QObject{
     QPushButton* prePfButton();
     QPushButton* nextPfButton();
   public slots:
+    void smooth();
     void showPf();
     void prePf();
     void nextPf();
     void showPath();
   private :
     int viewPf;
+    vector<PathItem*>* pathItemPool;
     vector<RobotData>* robots;
     vector<ObstacleData>* obstacles;
     PainterWidget* mainWidget;
@@ -44,8 +46,6 @@ class Window : public QObject{
     QPushButton *_nextPfButton;
     vector< vector <vector<int> > > *_cspace;
 };
-
-
 class BitmapItem : public QGraphicsItem{
   public :
     BitmapItem();

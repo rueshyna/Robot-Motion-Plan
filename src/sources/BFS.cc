@@ -105,6 +105,7 @@ void BFS::whoIsneighbor(vector<PointAndAngle>* _neighbor){
   _neighbor->push_back(n5);
 }
 
+TreeNode::TreeNode(){}
 TreeNode::TreeNode(PointAndAngle* _point_):_point(_point_){}
 TreeNode::TreeNode(PointAndAngle* _point_, TreeNode* _parent_):_point(_point_), _parent(_parent_){}
 PointAndAngle* TreeNode::point(){return _point;}

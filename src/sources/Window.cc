@@ -1,6 +1,7 @@
 #include "MotionPlan.h"
 
 Window::Window(vector<RobotData>* _robots, vector<ObstacleData>* _obstacles): robots(_robots), obstacles(_obstacles), viewPf(0){
+   pathItemPool = new vector<PathItem*>();
   _setButton = new QPushButton("Set");
   _resetButton = new QPushButton("Reset");
   _showPathButton = new QPushButton("Show Path");
@@ -76,11 +77,25 @@ void Window::productWindow(){
   QObject::connect(prePfButton(),SIGNAL(clicked()), this, SLOT(prePf()));
   QObject::connect(nextPfButton(),SIGNAL(clicked()), this, SLOT(nextPf()));
   QObject::connect(showPathButton(),SIGNAL(clicked()), this, SLOT(showPath()));
+  QObject::connect(smoothButton(),SIGNAL(clicked()), this, SLOT(smooth()));
+}
+
+void Window::smooth(){
+  for(vector<RobotData>::iterator i=robots->begin(); i!=robots->end(); ++i){
+    vector<PointAndAngle> path;
+    Smooth::smooth(i->cSpace(), &path, i->path()->begin(), static_cast<int>(i->path()->size()));
+    i->setPath(&path);
+  }
 }
 void Window::showPath(){
+  for(vector<PathItem*>::iterator i = pathItemPool->begin(); i != pathItemPool->end(); ++i){
+    mainScene->removeItem(*i);
+  }
+  pathItemPool->clear();
   for(vector<RobotData>::iterator i=robots->begin(); i!=robots->end(); ++i){
     for(vector<PointAndAngle>::iterator j=i->path()->begin(); j!=i->path()->end(); ++j){
       PathItem *pathItem = new PathItem(i->polygons(), &*j);
+      pathItemPool->push_back(pathItem);
       mainScene->addItem(pathItem);
     }
   }
