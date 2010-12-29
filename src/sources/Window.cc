@@ -82,10 +82,13 @@ void Window::productWindow(){
 
 void Window::smooth(){
   for(vector<RobotData>::iterator i=robots->begin(); i!=robots->end(); ++i){
-    vector<PointAndAngle> path;
-    Smooth::smooth(i->cSpace(), &path, i->path()->begin(), static_cast<int>(i->path()->size()));
-    i->setPath(&path);
+    int last((i->path()->size())?static_cast<int>(i->path()->size()-1):0);
+    vector<PointAndAngle> *path = new vector<PointAndAngle>();
+    Smooth::smooth(i->cSpace(), path,i->path(),0,last);
+    i->setPath(path);
   }
+    for(vector<PointAndAngle>::iterator j=(robots->begin()+1)->path()->begin(); j!=(robots->begin()+1)->path()->end(); ++j){
+    }
 }
 void Window::showPath(){
   for(vector<PathItem*>::iterator i = pathItemPool->begin(); i != pathItemPool->end(); ++i){

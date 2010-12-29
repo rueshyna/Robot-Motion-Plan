@@ -5,9 +5,9 @@
 class Smooth{
   private :
     Smooth();
-    static bool checkPath(vector< vector < vector<int> > >*, vector< PointAndAngle >*, vector< PointAndAngle >::iterator,int);
+    static bool checkPath(vector< vector < vector<int> > >*, vector< PointAndAngle >*, vector< PointAndAngle >*,int,int);
   public :
-    static void smooth(vector< vector < vector<int> > >*, vector< PointAndAngle >*, vector< PointAndAngle >::iterator, int);
+    static void smooth(vector< vector < vector<int> > >*, vector< PointAndAngle >*, vector< PointAndAngle >*, int, int);
 };
 
 class TreeNode{
