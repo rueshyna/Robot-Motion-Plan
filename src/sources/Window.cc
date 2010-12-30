@@ -87,8 +87,6 @@ void Window::smooth(){
     Smooth::smooth(i->cSpace(), path,i->path(),0,last);
     i->setPath(path);
   }
-    for(vector<PointAndAngle>::iterator j=(robots->begin()+1)->path()->begin(); j!=(robots->begin()+1)->path()->end(); ++j){
-    }
 }
 void Window::showPath(){
   for(vector<PathItem*>::iterator i = pathItemPool->begin(); i != pathItemPool->end(); ++i){
