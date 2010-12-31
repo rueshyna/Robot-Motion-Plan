@@ -2,6 +2,7 @@
 
 Window::Window(vector<RobotData>* _robots, vector<ObstacleData>* _obstacles): robots(_robots), obstacles(_obstacles), viewPf(0){
    pathItemPool = new vector<PathItem*>();
+   robotInits = new vector<ObjectItem*>();
   _setButton = new QPushButton("Set");
   _resetButton = new QPushButton("Reset");
   _showPathButton = new QPushButton("Show Path");
@@ -41,6 +42,7 @@ void Window::productWindow(){
     ObjectItem *r_init = new ObjectItem(&(*iter), R_INIT);
     mainScene->addItem(r_goal);
     mainScene->addItem(r_init);
+    robotInits->push_back(r_init);
   }
 
   mainWidget->setBackgroundBrush(QColor(230, 200, 167));
@@ -78,8 +80,32 @@ void Window::productWindow(){
   QObject::connect(nextPfButton(),SIGNAL(clicked()), this, SLOT(nextPf()));
   QObject::connect(showPathButton(),SIGNAL(clicked()), this, SLOT(showPath()));
   QObject::connect(smoothButton(),SIGNAL(clicked()), this, SLOT(smooth()));
+  //QObject::connect(animationButton(),SIGNAL(clicked()), this, SLOT(animation()));
+  QObject::connect(resetButton(),SIGNAL(clicked()), this, SLOT(reset()));
 }
 
+void Window::animation(){
+  for(vector<PathItem*>::iterator i = pathItemPool->begin(); i != pathItemPool->end(); ++i){
+    mainScene->removeItem(*i);
+  }
+  pathItemPool->clear();
+  for(int i=0; i!=robotInits->size(); ++i){
+    vector<PointAndAngle>* path = robots->at(i).path();
+    for(int j=path->size()-1; j!=-1; --j){
+      robotInits->at(i)->setPos(QPointF(path->at(j).x()*SCALE,path->at(j).y()*SCALE));
+      robotInits->at(i)->setY(SCREEN_HIGHT - robotInits->at(i)->pos().y());
+      robotInits->at(i)->setRotation(path->at(j).z());
+      mainScene->update();
+    }
+  }
+}
+
+void Window::reset(){
+  for(vector<PathItem*>::iterator i = pathItemPool->begin(); i != pathItemPool->end(); ++i){
+    mainScene->removeItem(*i);
+  }
+  pathItemPool->clear();
+}
 void Window::smooth(){
   for(vector<RobotData>::iterator i=robots->begin(); i!=robots->end(); ++i){
     int last((i->path()->size())?static_cast<int>(i->path()->size()-1):0);
@@ -121,4 +147,10 @@ void Window::showPf(){
     i->setCSpace(&CSpace::cObstacle(&*i,obstacles));
     i->setPath(&(BFS::path(i->initPos(), i->initAngle(), i->goalPos(), i->goalAngle(), i->bitmapItem()->bitmap(), i->cSpace())));
   }
+//  for(vector< vector<int> > ::iterator i = robots->at(0).cSpace()->at(0).begin(); i!=robots->at(0).cSpace()->at(0).end(); ++i){
+//    for(vector<int>::iterator j = i->begin(); j!=i->end(); ++j){
+//      cout << *j;
+//    }
+//    cout << endl;
+//  }
 }

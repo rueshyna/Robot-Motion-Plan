@@ -32,6 +32,7 @@ bool Smooth::checkPath(vector< vector < vector<int> > >* cspace, vector< PointAn
 
 void Smooth::smooth(vector< vector < vector<int> > >* cspace, vector< PointAndAngle >* path, vector< PointAndAngle >* p, int begin, int last){
   if(!(last-begin) || checkPath(cspace, path, p, begin, last)){
+    path->push_back(p->at(last));
     return;
   }
   smooth(cspace, path, p, begin, begin+(last-begin)/2);

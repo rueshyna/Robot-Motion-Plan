@@ -22,6 +22,8 @@ class Window : public QObject{
     QPushButton* prePfButton();
     QPushButton* nextPfButton();
   public slots:
+    void animation();
+    void reset();
     void smooth();
     void showPf();
     void prePf();
@@ -32,6 +34,7 @@ class Window : public QObject{
     vector<PathItem*>* pathItemPool;
     vector<RobotData>* robots;
     vector<ObstacleData>* obstacles;
+    vector<ObjectItem*>* robotInits;
     PainterWidget* mainWidget;
     PainterWidget* pfWidget;
     QGraphicsScene* mainScene;
