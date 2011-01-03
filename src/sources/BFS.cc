@@ -5,7 +5,7 @@ vector< PointAndAngle > BFS::path(QPointF* init, double initAngle,  QPointF* goa
   bool success(false);
   vector< stack<PointAndAngle* > > open;
   vector< vector< vector<int> > > map;
-  for(int i=0; i<256; ++i){
+  for(int i=0; i<=M; ++i){
     stack<PointAndAngle*> temp;
     open.push_back(temp);
   }
@@ -22,7 +22,7 @@ vector< PointAndAngle > BFS::path(QPointF* init, double initAngle,  QPointF* goa
   map[initAngle][init->y()][init->x()] = 1;
 
   PointAndAngle* x = new PointAndAngle(init->x(), init->y(), initAngle);
-  open[(*cspace)[initAngle][init->y()][init->x()]].push(x);
+  open[(*bitmap)[init->y()][init->x()]].push(x);
   TreeNode *tree = new TreeNode(x,0);
 
   vector<PointAndAngle> neighbor;
@@ -32,7 +32,7 @@ vector< PointAndAngle > BFS::path(QPointF* init, double initAngle,  QPointF* goa
   while(!success && !empty(&open)){
     PointAndAngle *x = first(&open);
     for(vector< TreeNode* >::iterator i = sibling.begin(); i!= sibling.end(); ++i){
-      if(x == (**i).point()){
+      if(x == (*i)->point()){
         tree = *i;
         sibling.clear();
         break;
@@ -43,7 +43,7 @@ vector< PointAndAngle > BFS::path(QPointF* init, double initAngle,  QPointF* goa
 
       xPlus->setZ((xPlus->z() == 360)?0:xPlus->z());
       xPlus->setZ((xPlus->z() == -1)?359:xPlus->z());
-      if((xPlus->x()<128 && xPlus->x()>=0) && (xPlus->y()<128 && xPlus->y()>=0) &&((*cspace)[xPlus->z()][xPlus->y()][xPlus->x()] != -1) && !(map[xPlus->z()][xPlus->y()][xPlus->x()])&&((*bitmap)[xPlus->y()][xPlus->x()]!=-1)){
+      if((xPlus->x()<128 && xPlus->x()>=0) && (xPlus->y()<128 && xPlus->y()>=0) &&((*cspace)[xPlus->z()][xPlus->y()][xPlus->x()] != -1) && !(map[xPlus->z()][xPlus->y()][xPlus->x()])){
         sibling.push_back(new TreeNode(xPlus, tree));
         open[(*bitmap)[xPlus->y()][xPlus->x()]].push(xPlus);
         map[xPlus->z()][xPlus->y()][xPlus->x()]=1;

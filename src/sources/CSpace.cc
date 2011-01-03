@@ -160,27 +160,28 @@ vector< vector < vector<int> > > CSpace::cObstacle(RobotData* robot, vector<Obst
 
           QPolygonF newPolygon;
 //=================================
-        //  if((obstacleVector.at(0).angle()+360 > robotVector.back().angle()) &&
-        //     (obstacleVector.back().angle() < robotVector.back().angle())){
-        //     robotVector.insert(robotVector.begin(),robotVector.back());
-        //     robotVector.begin()->setAngle(robotVector.begin()->angle()-360);
-        //  }else{
-             robotVector.push_back(robotVector.at(0));
-        //  }
+          double sita = (robotVector.back().angle()>=0&&robotVector.back().angle()<180)?robotVector.back().angle()+360:robotVector.back().angle();
+          if((obstacleVector.at(0).angle()+360.0 > sita) &&
+             (obstacleVector.back().angle() < sita)){
+             robotVector.insert(robotVector.begin(),robotVector.back());
+             robotVector.begin()->setAngle(robotVector.begin()->angle()-360);
+          }else{
+            robotVector.push_back(robotVector.at(0));
+            robotVector.back().setAngle(robotVector.begin()->angle()+360);
+          }
 
           obstacleVector.push_back(obstacleVector.at(0));
-//          obstacleVector.back().setAngle(obstacleVector.back().angle()+360);
+          obstacleVector.back().setAngle(obstacleVector.back().angle()+360);
 
           int m(0);
           int n(0);
 
        //     cout << "================="<<endl;
+          //  cout <<"o angle " << obstacleVector[m].angle()<<" "<<obstacleVector.size()<<endl;
           do{
             QPointF p = oPolygon.at(obstacleVector.at(m).from())- rPolygon.at(robotVector.at(n).from());
             newPolygon << p;
 //            cout <<p.x() << " "<<p.y()<<endl;
-         //   cout <<m << " "<<n<<endl;
-          //  cout <<"o angle " << obstacleVector[m].angle()<<" "<<obstacleVector.size()<<endl;
           //  cout <<"r angle " << robotVector[n].angle()<<" "<<robotVector.size()<<endl;;
 
 //            int obsAngle(abs(obstacleVector[m+1].angle() - obstacleVector[m].angle()));
@@ -196,7 +197,8 @@ vector< vector < vector<int> > > CSpace::cObstacle(RobotData* robot, vector<Obst
               m = m+1;
               n = n+1;
             }
-          }while((m != obstacleVector.size()) && (n!= robotVector.size()));
+          //  cout <<m << " "<<n<<endl;
+          }while(!((m == (obstacleVector.size()-1)) && (n== (robotVector.size()-1))));
    //         cout << "================="<<endl;
 //=================================
 /*

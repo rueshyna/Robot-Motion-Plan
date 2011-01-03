@@ -1,6 +1,7 @@
 #include "MotionPlan.h"
 
 int main (int argc, char *argv[]){
+
   QApplication app(argc, argv);
   string robot("./src/data/robot");
   string obstacle("./src/data/obstacle");

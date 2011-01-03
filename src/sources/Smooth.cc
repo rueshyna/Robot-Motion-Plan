@@ -9,7 +9,6 @@ bool Smooth::checkPath(vector< vector < vector<int> > >* cspace, vector< PointAn
   delta.setY(delta.y()/d);
   delta.setZ(delta.z()/d);
 
-
   for(int i=0; i!=static_cast<int>(d+1); ++i){
     PointAndAngle p = oPath->at(begin)-(delta*i);
     p.setZ((p.z()>360)?p.z()-360:p.z());
@@ -31,10 +30,14 @@ bool Smooth::checkPath(vector< vector < vector<int> > >* cspace, vector< PointAn
 }
 
 void Smooth::smooth(vector< vector < vector<int> > >* cspace, vector< PointAndAngle >* path, vector< PointAndAngle >* p, int begin, int last){
-  if(!(last-begin) || checkPath(cspace, path, p, begin, last)){
+  if((last-begin)==0){
     path->push_back(p->at(last));
     return;
   }
+  if(checkPath(cspace, path, p, begin, last)){
+    return;
+  }
+//  cout <<begin <<" " <<last <<endl;
   smooth(cspace, path, p, begin, begin+(last-begin)/2);
   smooth(cspace, path, p, begin+((last-begin)/2)+1, last);
 }

@@ -108,7 +108,8 @@ void ObjectItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event){
 
   }else if(event->buttons() == Qt::RightButton){
     QPointF nowPos = event->scenePos() - pos();
-    qreal newAngle = 2.0*M_PI -(atan2(nowPos.y(), nowPos.x())- atan2(pressPos.y(), pressPos.x()))*180.0/M_PI*2.0;
+    qreal newAngle = (atan2(nowPos.y(), nowPos.x())- atan2(pressPos.y(), pressPos.x()))*180.0/M_PI;
+    newAngle = (newAngle < 0)?360+newAngle :newAngle;
     setRotation(newAngle);
 
     switch (robot_pos) {
